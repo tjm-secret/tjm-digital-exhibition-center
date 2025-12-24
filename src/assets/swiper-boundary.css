@@ -1,0 +1,165 @@
+/* Swiper 邊界保護視覺回饋樣式 */
+
+/* 到達開始邊界的回饋效果 */
+.swiper-boundary-start {
+  position: relative;
+}
+
+.swiper-boundary-start::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 4px;
+  background: linear-gradient(to right, #ef4444, transparent);
+  z-index: 1000;
+  animation: boundary-pulse-start 0.3s ease-out;
+}
+
+/* 到達結束邊界的回饋效果 */
+.swiper-boundary-end {
+  position: relative;
+}
+
+.swiper-boundary-end::after {
+  content: '';
+  position: absolute;
+  right: 0;
+  top: 0;
+  bottom: 0;
+  width: 4px;
+  background: linear-gradient(to left, #ef4444, transparent);
+  z-index: 1000;
+  animation: boundary-pulse-end 0.3s ease-out;
+}
+
+/* 開始邊界脈衝動畫 */
+@keyframes boundary-pulse-start {
+  0% {
+    opacity: 0;
+    transform: translateX(-10px);
+  }
+  50% {
+    opacity: 1;
+    transform: translateX(0);
+  }
+  100% {
+    opacity: 0;
+    transform: translateX(-5px);
+  }
+}
+
+/* 結束邊界脈衝動畫 */
+@keyframes boundary-pulse-end {
+  0% {
+    opacity: 0;
+    transform: translateX(10px);
+  }
+  50% {
+    opacity: 1;
+    transform: translateX(0);
+  }
+  100% {
+    opacity: 0;
+    transform: translateX(5px);
+  }
+}
+
+/* 邊界提示文字樣式 */
+.swiper-boundary-hint {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  background: rgba(0, 0, 0, 0.8);
+  color: white;
+  padding: 8px 16px;
+  border-radius: 20px;
+  font-size: 14px;
+  z-index: 1001;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.swiper-boundary-hint.show {
+  opacity: 1;
+}
+
+.swiper-boundary-hint.start {
+  left: 20px;
+}
+
+.swiper-boundary-hint.end {
+  right: 20px;
+}
+
+/* 邊界阻力效果 */
+.swiper-container {
+  overflow: hidden;
+}
+
+.swiper-wrapper {
+  transition-timing-function: cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+
+/* 邊界彈性效果 */
+.swiper-container-horizontal > .swiper-wrapper {
+  transition-property: transform;
+}
+
+/* 響應式邊界提示 */
+@media (max-width: 768px) {
+  .swiper-boundary-start::before,
+  .swiper-boundary-end::after {
+    width: 3px;
+  }
+  
+  .swiper-boundary-hint {
+    font-size: 12px;
+    padding: 6px 12px;
+  }
+  
+  .swiper-boundary-hint.start {
+    left: 10px;
+  }
+  
+  .swiper-boundary-hint.end {
+    right: 10px;
+  }
+}
+
+/* 高對比度模式支援 */
+@media (prefers-contrast: high) {
+  .swiper-boundary-start::before,
+  .swiper-boundary-end::after {
+    background: #000;
+  }
+  
+  .swiper-boundary-hint {
+    background: #000;
+    border: 2px solid #fff;
+  }
+}
+
+/* 減少動畫偏好支援 */
+@media (prefers-reduced-motion: reduce) {
+  .swiper-boundary-start::before,
+  .swiper-boundary-end::after {
+    animation: none;
+  }
+  
+  @keyframes boundary-pulse-start {
+    0%, 100% {
+      opacity: 1;
+      transform: none;
+    }
+  }
+  
+  @keyframes boundary-pulse-end {
+    0%, 100% {
+      opacity: 1;
+      transform: none;
+    }
+  }
+}

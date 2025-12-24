@@ -1,0 +1,6 @@
+<svg width="1920" height="1080" xmlns="http://www.w3.org/2000/svg">
+  <rect width="100%" height="100%" fill="#f3f4f6"/>
+  <rect x="100" y="100" width="1720" height="880" fill="#fbbf24" stroke="#f59e0b" stroke-width="4"/>
+  <text x="960" y="540" text-anchor="middle" font-family="Arial, sans-serif" font-size="48" fill="#92400e">金箔藝術作品</text>
+  <text x="960" y="600" text-anchor="middle" font-family="Arial, sans-serif" font-size="24" fill="#92400e">Gold Leaf Artwork</text>
+</svg>

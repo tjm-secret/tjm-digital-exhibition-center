@@ -1,0 +1,10 @@
+@import './base.css';
+
+/* Exhibition-specific global styles */
+html, body {
+  @apply h-full m-0 p-0 overflow-hidden;
+}
+
+#app {
+  @apply h-full;
+}

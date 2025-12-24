@@ -1,0 +1,94 @@
+{
+  "id": "sample",
+  "title": "範例展覽",
+  "description": "這是一個展示線上展覽系統功能的範例展覽",
+  "scenes": [
+    {
+      "id": "scene-1",
+      "title": "第一個場景",
+      "description": {
+        "zh": "歡迎來到線上展覽系統。這是第一個展示場景。",
+        "en": "Welcome to the online exhibition system. This is the first display scene.",
+        "ja": "オンライン展示システムへようこそ。これは最初の展示シーンです。"
+      },
+      "image": {
+        "url": "scene-1.jpg",
+        "alt": "第一個場景的展示圖片",
+        "width": 1920,
+        "height": 1080,
+        "thumbnail": "scene-1-thumb.jpg"
+      },
+      "audio": {
+        "zh": {
+          "url": "scene-1-zh.mp3",
+          "duration": 30,
+          "format": "mp3",
+          "size": 480000
+        },
+        "en": {
+          "url": "scene-1-zh.mp3",
+          "duration": 32,
+          "format": "mp3",
+          "size": 512000
+        }
+      },
+      "order": 1,
+      "metadata": {
+        "artist": "範例藝術家",
+        "year": "2024",
+        "medium": "數位藝術",
+        "dimensions": "1920x1080 像素"
+      }
+    },
+    {
+      "id": "scene-2",
+      "title": "第二個場景",
+      "description": {
+        "zh": "這是第二個展示場景，展示了系統的滑動導覽功能。",
+        "en": "This is the second display scene, showcasing the system's swipe navigation feature.",
+        "ja": "これは2番目の展示シーンで、システムのスワイプナビゲーション機能を紹介しています。"
+      },
+      "image": {
+        "url": "scene-2.jpg",
+        "alt": "第二個場景的展示圖片",
+        "width": 1920,
+        "height": 1080,
+        "thumbnail": "scene-2-thumb.jpg"
+      },
+      "audio": {
+        "zh": {
+          "url": "scene-2-zh.mp3",
+          "duration": 28,
+          "format": "mp3",
+          "size": 448000
+        },
+        "en": {
+          "url": "scene-2-en.mp3",
+          "duration": 30,
+          "format": "mp3",
+          "size": 480000
+        }
+      },
+      "order": 2,
+      "metadata": {
+        "artist": "範例藝術家",
+        "year": "2024",
+        "medium": "數位藝術",
+        "dimensions": "1920x1080 像素"
+      }
+    }
+  ],
+  "defaultLanguage": "zh",
+  "availableLanguages": ["zh", "en", "ja"],
+  "resourceConfig": {
+    "mode": "static",
+    "staticPath": "/assets/exhibitions/",
+    "fallbackStrategy": "none"
+  },
+  "settings": {
+    "autoplay": false,
+    "showThumbnails": true,
+    "enableKeyboard": true,
+    "preloadCount": 2
+  }
+}
