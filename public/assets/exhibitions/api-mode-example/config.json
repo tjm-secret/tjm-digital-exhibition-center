@@ -1,0 +1,106 @@
+{
+  "id": "api-mode-example",
+  "title": "API 模式範例展覽",
+  "description": "展示 API 動態載入模式的範例展覽，適用於需要即時內容管理的大型展覽",
+  "scenes": [
+    {
+      "id": "scene-1",
+      "title": "當代攝影藝術",
+      "description": {
+        "zh": "當代攝影藝術突破了傳統的框架限制，融合數位技術與創意表達，創造出令人驚艷的視覺作品。",
+        "en": "Contemporary photography breaks through traditional framework limitations, combining digital technology with creative expression to create stunning visual works.",
+        "ja": "現代写真芸術は従来の枠組みの制限を突破し、デジタル技術と創造的表現を融合して、驚くべき視覚作品を創造しています。"
+      },
+      "image": {
+        "url": "https://api.example.com/media/images/contemporary-photography.jpg",
+        "alt": "當代攝影藝術作品",
+        "width": 1920,
+        "height": 1080,
+        "thumbnail": "https://api.example.com/media/images/contemporary-photography-thumb.jpg"
+      },
+      "audio": {
+        "zh": {
+          "url": "https://api.example.com/media/audio/scene-1-zh.mp3",
+          "duration": 40,
+          "format": "mp3",
+          "size": 640000
+        },
+        "en": {
+          "url": "https://api.example.com/media/audio/scene-1-en.mp3",
+          "duration": 43,
+          "format": "mp3",
+          "size": 688000
+        },
+        "ja": {
+          "url": "https://api.example.com/media/audio/scene-1-ja.mp3",
+          "duration": 38,
+          "format": "mp3",
+          "size": 608000
+        }
+      },
+      "order": 1,
+      "metadata": {
+        "artist": "現代攝影師聯盟",
+        "year": "2024",
+        "medium": "數位攝影",
+        "dimensions": "多尺寸系列作品"
+      }
+    },
+    {
+      "id": "scene-2",
+      "title": "互動裝置藝術",
+      "description": {
+        "zh": "互動裝置藝術邀請觀眾成為作品的一部分，透過感應器和數位介面，創造獨特的參與式藝術體驗。",
+        "en": "Interactive installation art invites viewers to become part of the artwork, creating unique participatory art experiences through sensors and digital interfaces.",
+        "ja": "インタラクティブインスタレーションアートは、観客を作品の一部として招き、センサーとデジタルインターフェースを通じて、ユニークな参加型芸術体験を創造します。"
+      },
+      "image": {
+        "url": "https://api.example.com/media/images/interactive-installation.jpg",
+        "alt": "互動裝置藝術展示",
+        "width": 1920,
+        "height": 1080,
+        "thumbnail": "https://api.example.com/media/images/interactive-installation-thumb.jpg"
+      },
+      "audio": {
+        "zh": {
+          "url": "https://api.example.com/media/audio/scene-2-zh.mp3",
+          "duration": 47,
+          "format": "mp3",
+          "size": 752000
+        },
+        "en": {
+          "url": "https://api.example.com/media/audio/scene-2-en.mp3",
+          "duration": 50,
+          "format": "mp3",
+          "size": 800000
+        },
+        "ja": {
+          "url": "https://api.example.com/media/audio/scene-2-ja.mp3",
+          "duration": 44,
+          "format": "mp3",
+          "size": 704000
+        }
+      },
+      "order": 2,
+      "metadata": {
+        "artist": "互動藝術工作室",
+        "year": "2024",
+        "medium": "感應式數位裝置",
+        "dimensions": "空間特定裝置"
+      }
+    }
+  ],
+  "defaultLanguage": "zh",
+  "availableLanguages": ["zh", "en", "ja"],
+  "resourceConfig": {
+    "mode": "api",
+    "apiEndpoint": "https://api.example.com/exhibitions",
+    "fallbackStrategy": "static"
+  },
+  "settings": {
+    "autoplay": false,
+    "showThumbnails": true,
+    "enableKeyboard": true,
+    "preloadCount": 1
+  }
+}

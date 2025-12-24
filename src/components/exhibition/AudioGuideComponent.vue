@@ -9,27 +9,50 @@
     />
 
     <!-- 音訊控制面板 -->
-    <div class="audio-controls bg-gray-50 rounded-lg p-4 mb-4">
+    <div :class="[
+      'audio-controls bg-gray-50 rounded-lg mb-4',
+      layoutMode === 'mobile' ? 'p-2' : 'p-4'
+    ]">
       <!-- 載入狀態 -->
-      <div v-if="isLoading" class="flex items-center justify-center py-4">
+      <div v-if="isLoading" :class="[
+        'flex items-center justify-center',
+        layoutMode === 'mobile' ? 'py-2' : 'py-4'
+      ]">
         <div class="animate-spin rounded-full h-6 w-6 border-b-2 border-blue-500"></div>
-        <span class="ml-2 text-sm text-gray-600">載入音訊中...</span>
+        <span :class="[
+          'ml-2 text-gray-600',
+          layoutMode === 'mobile' ? 'text-xs' : 'text-sm'
+        ]">載入音訊中...</span>
       </div>
 
       <!-- 音訊控制按鈕 -->
       <div v-else class="audio-player">
-        <div class="flex items-center justify-between mb-3">
-          <div class="flex items-center space-x-2">
+        <div :class="[
+          'flex items-center justify-between',
+          layoutMode === 'mobile' ? 'mb-2' : 'mb-3'
+        ]">
+          <div :class="[
+            'flex items-center',
+            layoutMode === 'mobile' ? 'space-x-1' : 'space-x-2'
+          ]">
             <!-- 播放/暫停按鈕 -->
             <button
               @click="togglePlayPause"
               :disabled="!hasAudio"
-              class="flex items-center justify-center w-12 h-12 rounded-full bg-blue-500 hover:bg-blue-600 disabled:bg-gray-300 disabled:cursor-not-allowed text-white transition-colors"
+              :class="[
+                'flex items-center justify-center rounded-full bg-blue-500 hover:bg-blue-600 disabled:bg-gray-300 disabled:cursor-not-allowed text-white transition-colors shadow-lg',
+                layoutMode === 'mobile' ? 'w-10 h-10' : 'w-12 h-12'
+              ]"
             >
-              <svg v-if="!isPlaying" class="w-6 h-6 ml-1" fill="currentColor" viewBox="0 0 20 20">
+              <svg v-if="!isPlaying" :class="[
+                'ml-1',
+                layoutMode === 'mobile' ? 'w-4 h-4' : 'w-5 h-5'
+              ]" fill="currentColor" viewBox="0 0 20 20">
                 <path d="M8 5v10l8-5-8-5z"/>
               </svg>
-              <svg v-else class="w-6 h-6" fill="currentColor" viewBox="0 0 20 20">
+              <svg v-else :class="[
+                layoutMode === 'mobile' ? 'w-4 h-4' : 'w-5 h-5'
+              ]" fill="currentColor" viewBox="0 0 20 20">
                 <path d="M5 4h3v12H5V4zm7 0h3v12h-3V4z"/>
               </svg>
             </button>
@@ -38,9 +61,14 @@
             <button
               @click="stopAudio"
               :disabled="!hasAudio"
-              class="flex items-center justify-center w-10 h-10 rounded-full bg-gray-500 hover:bg-gray-600 disabled:bg-gray-300 disabled:cursor-not-allowed text-white transition-colors"
+              :class="[
+                'flex items-center justify-center rounded-full bg-gray-500 hover:bg-gray-600 disabled:bg-gray-300 disabled:cursor-not-allowed text-white transition-colors',
+                layoutMode === 'mobile' ? 'w-8 h-8' : 'w-10 h-10'
+              ]"
             >
-              <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+              <svg :class="[
+                layoutMode === 'mobile' ? 'w-3 h-3' : 'w-4 h-4'
+              ]" fill="currentColor" viewBox="0 0 20 20">
                 <path d="M4 4h12v12H4V4z"/>
               </svg>
             </button>
@@ -49,17 +77,28 @@
             <button
               @click="replayAudio"
               :disabled="!hasAudio"
-              class="flex items-center justify-center w-10 h-10 rounded-full bg-green-500 hover:bg-green-600 disabled:bg-gray-300 disabled:cursor-not-allowed text-white transition-colors"
+              :class="[
+                'flex items-center justify-center rounded-full bg-green-500 hover:bg-green-600 disabled:bg-gray-300 disabled:cursor-not-allowed text-white transition-colors',
+                layoutMode === 'mobile' ? 'w-8 h-8' : 'w-10 h-10'
+              ]"
             >
-              <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+              <svg :class="[
+                layoutMode === 'mobile' ? 'w-3 h-3' : 'w-4 h-4'
+              ]" fill="currentColor" viewBox="0 0 20 20">
                 <path d="M4 2a1 1 0 011 1v2.101a7.002 7.002 0 0111.601 2.566 1 1 0 11-1.885.666A5.002 5.002 0 005.999 7H9a1 1 0 010 2H4a1 1 0 01-1-1V3a1 1 0 011-1z"/>
               </svg>
             </button>
           </div>
 
           <!-- 音量控制 -->
-          <div class="flex items-center space-x-2">
-            <svg class="w-4 h-4 text-gray-500" fill="currentColor" viewBox="0 0 20 20">
+          <div :class="[
+            'flex items-center',
+            layoutMode === 'mobile' ? 'space-x-1' : 'space-x-2'
+          ]">
+            <svg :class="[
+              'text-gray-500',
+              layoutMode === 'mobile' ? 'w-3 h-3' : 'w-4 h-4'
+            ]" fill="currentColor" viewBox="0 0 20 20">
               <path d="M9.383 3.076A1 1 0 0110 4v12a1 1 0 01-1.617.793L4.617 13H2a1 1 0 01-1-1V8a1 1 0 011-1h2.617l3.766-3.793a1 1 0 011.617.793z"/>
               <path d="M12.293 7.293a1 1 0 011.414 0L15 8.586l1.293-1.293a1 1 0 111.414 1.414L16.414 10l1.293 1.293a1 1 0 01-1.414 1.414L15 11.414l-1.293 1.293a1 1 0 01-1.414-1.414L13.586 10l-1.293-1.293a1 1 0 010-1.414z"/>
             </svg>
@@ -70,14 +109,20 @@
               min="0"
               max="1"
               step="0.1"
-              class="w-20 h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer"
+              :class="[
+                'h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer',
+                layoutMode === 'mobile' ? 'w-12' : 'w-20'
+              ]"
             />
           </div>
         </div>
 
         <!-- 進度條 -->
         <div class="progress-container">
-          <div class="flex items-center justify-between text-xs text-gray-500 mb-1">
+          <div :class="[
+            'flex items-center justify-between text-gray-500 mb-1',
+            layoutMode === 'mobile' ? 'text-xs' : 'text-xs'
+          ]">
             <span>{{ formatTime(currentTime) }}</span>
             <span>{{ formatTime(duration) }}</span>
           </div>
@@ -92,12 +137,24 @@
     </div>
 
     <!-- 文字內容顯示 -->
-    <div class="text-content bg-white rounded-lg p-4 border border-gray-200">
-      <h3 class="text-lg font-semibold mb-2 text-gray-800">
+    <div :class="[
+      'text-content bg-white rounded-lg border border-gray-200',
+      layoutMode === 'mobile' ? 'p-2' : 'p-4'
+    ]">
+      <h3 :class="[
+        'font-semibold mb-2 text-gray-800',
+        layoutMode === 'mobile' ? 'text-base' : 'text-lg'
+      ]">
         {{ scene?.title || '場景標題' }}
       </h3>
-      <div class="text-content-body">
-        <p class="text-gray-700 leading-relaxed">
+      <div :class="[
+        'text-content-body',
+        layoutMode === 'mobile' ? 'max-h-32' : 'max-h-64'
+      ]">
+        <p :class="[
+          'text-gray-700 leading-relaxed',
+          layoutMode === 'mobile' ? 'text-sm' : ''
+        ]">
           {{ currentDescription }}
         </p>
       </div>
@@ -125,10 +182,12 @@ import LanguageSwitcher from './LanguageSwitcher.vue'
 interface Props {
   scene: Scene | null
   defaultLanguage?: string
+  layoutMode?: 'desktop' | 'tablet' | 'mobile'
 }
 
 const props = withDefaults(defineProps<Props>(), {
-  defaultLanguage: 'zh'
+  defaultLanguage: 'zh',
+  layoutMode: 'desktop'
 })
 
 // 響應式狀態

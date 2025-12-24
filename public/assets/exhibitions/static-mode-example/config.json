@@ -1,0 +1,149 @@
+{
+  "id": "static-mode-example",
+  "title": "靜態模式範例展覽",
+  "description": "展示靜態檔案載入模式的範例展覽，適用於小型展覽或 CDN 部署",
+  "scenes": [
+    {
+      "id": "scene-1",
+      "title": "數位藝術的演進",
+      "description": {
+        "zh": "探索數位藝術從早期電腦圖形到現代互動裝置的發展歷程。這個場景展示了技術與藝術結合的無限可能。",
+        "en": "Explore the evolution of digital art from early computer graphics to modern interactive installations. This scene showcases the infinite possibilities of combining technology and art.",
+        "ja": "初期のコンピュータグラフィックスから現代のインタラクティブインスタレーションまで、デジタルアートの進化を探求します。"
+      },
+      "image": {
+        "url": "digital-art-evolution.jpg",
+        "alt": "數位藝術演進時間軸展示",
+        "width": 1920,
+        "height": 1080,
+        "thumbnail": "digital-art-evolution-thumb.jpg"
+      },
+      "audio": {
+        "zh": {
+          "url": "scene-1-zh.mp3",
+          "duration": 45,
+          "format": "mp3",
+          "size": 720000
+        },
+        "en": {
+          "url": "scene-1-en.mp3",
+          "duration": 48,
+          "format": "mp3",
+          "size": 768000
+        },
+        "ja": {
+          "url": "scene-1-ja.mp3",
+          "duration": 42,
+          "format": "mp3",
+          "size": 672000
+        }
+      },
+      "order": 1,
+      "metadata": {
+        "artist": "數位藝術史研究團隊",
+        "year": "2024",
+        "medium": "數位媒體裝置",
+        "dimensions": "互動式展示"
+      }
+    },
+    {
+      "id": "scene-2",
+      "title": "虛擬實境藝術體驗",
+      "description": {
+        "zh": "沉浸式虛擬實境技術為藝術創作開啟了全新的維度。觀眾可以進入藝術家創造的虛擬世界，體驗前所未有的感官饗宴。",
+        "en": "Immersive virtual reality technology opens up new dimensions for artistic creation. Visitors can enter virtual worlds created by artists and experience unprecedented sensory feasts.",
+        "ja": "没入型バーチャルリアリティ技術は、芸術創作に新たな次元を開きます。来場者はアーティストが創造した仮想世界に入り、前例のない感覚的な体験を楽しめます。"
+      },
+      "image": {
+        "url": "vr-art-experience.jpg",
+        "alt": "虛擬實境藝術體驗空間",
+        "width": 1920,
+        "height": 1080,
+        "thumbnail": "vr-art-experience-thumb.jpg"
+      },
+      "audio": {
+        "zh": {
+          "url": "scene-2-zh.mp3",
+          "duration": 52,
+          "format": "mp3",
+          "size": 832000
+        },
+        "en": {
+          "url": "scene-2-en.mp3",
+          "duration": 55,
+          "format": "mp3",
+          "size": 880000
+        },
+        "ja": {
+          "url": "scene-2-ja.mp3",
+          "duration": 49,
+          "format": "mp3",
+          "size": 784000
+        }
+      },
+      "order": 2,
+      "metadata": {
+        "artist": "VR 藝術創作聯盟",
+        "year": "2024",
+        "medium": "虛擬實境裝置",
+        "dimensions": "360° 沉浸式空間"
+      }
+    },
+    {
+      "id": "scene-3",
+      "title": "AI 生成藝術的未來",
+      "description": {
+        "zh": "人工智慧技術正在重新定義藝術創作的邊界。從機器學習生成的畫作到 AI 協助的音樂創作，探索人機協作的藝術新紀元。",
+        "en": "Artificial intelligence technology is redefining the boundaries of artistic creation. From machine learning-generated paintings to AI-assisted music composition, explore the new era of human-machine collaborative art.",
+        "ja": "人工知能技術は芸術創作の境界を再定義しています。機械学習で生成された絵画からAIが支援する音楽創作まで、人間と機械の協働による芸術の新時代を探求します。"
+      },
+      "image": {
+        "url": "ai-generated-art.jpg",
+        "alt": "AI 生成藝術作品展示",
+        "width": 1920,
+        "height": 1080,
+        "thumbnail": "ai-generated-art-thumb.jpg"
+      },
+      "audio": {
+        "zh": {
+          "url": "scene-3-zh.mp3",
+          "duration": 58,
+          "format": "mp3",
+          "size": 928000
+        },
+        "en": {
+          "url": "scene-3-en.mp3",
+          "duration": 61,
+          "format": "mp3",
+          "size": 976000
+        },
+        "ja": {
+          "url": "scene-3-ja.mp3",
+          "duration": 55,
+          "format": "mp3",
+          "size": 880000
+        }
+      },
+      "order": 3,
+      "metadata": {
+        "artist": "AI 藝術實驗室",
+        "year": "2024",
+        "medium": "AI 生成數位藝術",
+        "dimensions": "多媒體互動展示"
+      }
+    }
+  ],
+  "defaultLanguage": "zh",
+  "availableLanguages": ["zh", "en", "ja"],
+  "resourceConfig": {
+    "mode": "static",
+    "staticPath": "/assets/exhibitions/",
+    "fallbackStrategy": "none"
+  },
+  "settings": {
+    "autoplay": false,
+    "showThumbnails": true,
+    "enableKeyboard": true,
+    "preloadCount": 2
+  }
+}

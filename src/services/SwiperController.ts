@@ -65,6 +65,21 @@ export class SwiperController {
       speed: this.config.speed,
       loop: this.config.loop,
       
+      // 觸控優化配置
+      touchRatio: 1,
+      touchAngle: 45,
+      longSwipes: true,
+      longSwipesRatio: 0.5,
+      longSwipesMs: 300,
+      followFinger: true,
+      shortSwipes: true,
+      threshold: 10,
+      touchMoveStopPropagation: false,
+      simulateTouch: true,
+      touchStartPreventDefault: false,
+      touchStartForcePreventDefault: false,
+      touchReleaseOnEdges: false,
+      
       // 邊界保護配置
       resistance: true,
       resistanceRatio: 0.85,
@@ -96,6 +111,16 @@ export class SwiperController {
           if (this.swiperInstance?.isBeginning) {
             this.handleBoundaryAttempt('prev')
           }
+        },
+        // 觸控事件優化
+        touchStart: (swiper, event) => {
+          this.handleTouchStart(event)
+        },
+        touchMove: (swiper, event) => {
+          this.handleTouchMove(event)
+        },
+        touchEnd: (swiper, event) => {
+          this.handleTouchEnd(event)
         }
       }
     }
@@ -374,6 +399,38 @@ export class SwiperController {
     if (this.onBoundaryAttemptCallback) {
       this.onBoundaryAttemptCallback(direction)
     }
+  }
+
+  /**
+   * 處理觸控開始事件
+   */
+  private handleTouchStart(event: TouchEvent): void {
+    // 記錄觸控開始時間，用於區分快速滑動和慢速滑動
+    const touchStartTime = Date.now()
+    
+    // 在觸控裝置上提供觸覺回饋
+    if ('vibrate' in navigator && event.touches.length === 1) {
+      // 輕微震動表示觸控開始
+      navigator.vibrate(10)
+    }
+  }
+
+  /**
+   * 處理觸控移動事件
+   */
+  private handleTouchMove(event: TouchEvent): void {
+    // 防止在滑動時意外觸發其他手勢
+    if (event.touches.length > 1) {
+      event.preventDefault()
+    }
+  }
+
+  /**
+   * 處理觸控結束事件
+   */
+  private handleTouchEnd(event: TouchEvent): void {
+    // 觸控結束時的處理邏輯
+    // 可以在這裡添加額外的觸控回饋
   }
 }
 

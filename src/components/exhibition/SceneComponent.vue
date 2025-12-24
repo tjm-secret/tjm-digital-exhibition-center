@@ -58,16 +58,23 @@
         <!-- Scene Metadata Overlay (optional) -->
         <div 
           v-if="scene.metadata && showMetadata"
-          class="absolute bottom-4 left-4 bg-black bg-opacity-70 text-white p-3 rounded-lg max-w-sm"
+          :class="[
+            'absolute bg-black bg-opacity-70 text-white p-3 rounded-lg max-w-sm',
+            // 根據佈局模式調整位置
+            layoutMode === 'desktop' ? 'bottom-4 left-4' : 'bottom-2 left-2',
+            layoutMode === 'mobile' ? 'text-sm p-2' : ''
+          ]"
         >
-          <h3 class="font-semibold text-lg mb-1">{{ scene.title }}</h3>
-          <div v-if="scene.metadata.artist" class="text-sm opacity-90">
+          <h3 :class="['font-semibold mb-1', layoutMode === 'mobile' ? 'text-base' : 'text-lg']">
+            {{ scene.title }}
+          </h3>
+          <div v-if="scene.metadata.artist" :class="['opacity-90', layoutMode === 'mobile' ? 'text-xs' : 'text-sm']">
             藝術家: {{ scene.metadata.artist }}
           </div>
-          <div v-if="scene.metadata.year" class="text-sm opacity-90">
+          <div v-if="scene.metadata.year" :class="['opacity-90', layoutMode === 'mobile' ? 'text-xs' : 'text-sm']">
             年份: {{ scene.metadata.year }}
           </div>
-          <div v-if="scene.metadata.medium" class="text-sm opacity-90">
+          <div v-if="scene.metadata.medium" :class="['opacity-90', layoutMode === 'mobile' ? 'text-xs' : 'text-sm']">
             媒材: {{ scene.metadata.medium }}
           </div>
         </div>
@@ -87,12 +94,14 @@ interface Props {
   isActive?: boolean
   isPreloaded?: boolean
   showMetadata?: boolean
+  layoutMode?: 'desktop' | 'tablet' | 'mobile'
 }
 
 const props = withDefaults(defineProps<Props>(), {
   isActive: false,
   isPreloaded: false,
-  showMetadata: true
+  showMetadata: true,
+  layoutMode: 'desktop'
 })
 
 // Emits

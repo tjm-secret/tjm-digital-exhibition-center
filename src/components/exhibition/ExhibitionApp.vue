@@ -8,45 +8,34 @@
           :key="scene.id"
           class="swiper-slide"
         >
-          <!-- 桌面版：左右分欄 -->
-          <div class="hidden lg:flex" style="height: calc(100vh - 4rem);">
-            <div class="lg:w-2/3 xl:w-3/4">
+          <!-- 使用響應式佈局組件 -->
+          <ResponsiveLayout
+            @layout-change="handleLayoutChange"
+            @orientation-change="handleOrientationChange"
+          >
+            <!-- 圖片顯示區域 -->
+            <template #image="{ layoutMode }">
               <SceneComponent
                 :scene="scene"
                 :is-active="index === currentSceneIndex"
+                :layout-mode="layoutMode"
                 @content-loaded="handleContentLoaded"
                 @image-loaded="handleImageLoaded"
                 @image-error="handleImageError"
               />
-            </div>
-            <div class="lg:w-1/3 xl:w-1/4 bg-gray-50 p-4 overflow-y-auto">
-              <!-- Audio Guide Component -->
-              <AudioGuideComponent
-                :scene="scene"
-                :default-language="'zh'"
-              />
-            </div>
-          </div>
-          
-          <!-- 行動版：上下堆疊 -->
-          <div class="lg:hidden flex flex-col h-screen">
-            <div class="flex-1 md:h-3/5">
-              <SceneComponent
-                :scene="scene"
-                :is-active="index === currentSceneIndex"
-                @content-loaded="handleContentLoaded"
-                @image-loaded="handleImageLoaded"
-                @image-error="handleImageError"
-              />
-            </div>
-            <div class="h-2/5 md:h-2/5 bg-gray-50 p-4 overflow-y-auto">
-              <!-- Audio Guide Component -->
-              <AudioGuideComponent
-                :scene="scene"
-                :default-language="'zh'"
-              />
-            </div>
-          </div>
+            </template>
+            
+            <!-- 內容面板區域 -->
+            <template #content="{ layoutMode }">
+              <div class="p-4 h-full overflow-y-auto">
+                <AudioGuideComponent
+                  :scene="scene"
+                  :default-language="'zh'"
+                  :layout-mode="layoutMode"
+                />
+              </div>
+            </template>
+          </ResponsiveLayout>
         </div>
       </div>
     </div>
@@ -78,12 +67,14 @@
 
 <script setup lang="ts">
 import { ref, computed, onMounted, onUnmounted, nextTick, watch } from 'vue'
-import type { Scene } from '@/types'
+import type { Scene, ExhibitionConfig, ResourceConfig } from '@/types'
 import SceneComponent from './SceneComponent.vue'
 import NavigationComponent from './NavigationComponent.vue'
 import AudioGuideComponent from './AudioGuideComponent.vue'
+import ResponsiveLayout from './ResponsiveLayout.vue'
 import { globalImageLoader } from '@/services/ImageLoader'
 import { globalSwiperController } from '@/services/SwiperController'
+import { ResourceManager } from '@/services/ResourceManager'
 
 // 基本狀態管理
 const scenes = ref<Scene[]>([])
@@ -91,6 +82,17 @@ const currentSceneIndex = ref(0)
 const swiperContainer = ref<HTMLElement>()
 const boundaryMessage = ref('')
 const showBoundaryHint = ref(false)
+const exhibitionConfig = ref<ExhibitionConfig | null>(null)
+const isLoading = ref(true)
+const loadError = ref<string>('')
+
+// ResourceManager 實例
+const resourceConfig: ResourceConfig = {
+  mode: 'static',
+  staticPath: '/assets/exhibitions/',
+  fallbackStrategy: 'none'
+}
+const resourceManager = new ResourceManager(resourceConfig)
 
 // 計算屬性
 const currentScene = computed(() => {
@@ -100,48 +102,59 @@ const currentScene = computed(() => {
 // 基本方法定義
 const initializeExhibition = async () => {
   console.log('Initializing exhibition...')
-  // 載入示例場景數據
-  loadSampleScenes()
   
-  // 等待 DOM 更新後初始化 Swiper
-  await nextTick()
-  initializeSwiper()
-}
-
-const initializeSwiper = () => {
-  if (!swiperContainer.value || scenes.value.length === 0) {
-    console.warn('Swiper container not found or no scenes available')
-    return
+  try {
+    isLoading.value = true
+    loadError.value = ''
+    
+    // 載入展覽配置
+    await loadExhibitionConfig('sample') // 使用 'sample' 作為展覽 ID
+    
+    // 等待 DOM 更新後初始化 Swiper
+    await nextTick()
+    initializeSwiper()
+  } catch (error) {
+    console.error('Failed to initialize exhibition:', error)
+    loadError.value = error instanceof Error ? error.message : '載入展覽失敗'
+    
+    // 如果載入失敗，使用備用場景
+    loadFallbackScenes()
+    await nextTick()
+    initializeSwiper()
+  } finally {
+    isLoading.value = false
   }
-
-  // 初始化 Swiper
-  globalSwiperController.initializeSwiper(swiperContainer.value, scenes.value.length)
-  
-  // 設置事件監聽器
-  globalSwiperController.onSlideChange((index: number) => {
-    console.log(`Swiper slide changed to: ${index}`)
-    currentSceneIndex.value = index
-  })
-  
-  globalSwiperController.onReachBeginning(() => {
-    console.log('Reached beginning of exhibition')
-    showBoundaryMessage('已到達第一個場景')
-  })
-  
-  globalSwiperController.onReachEnd(() => {
-    console.log('Reached end of exhibition')
-    showBoundaryMessage('已到達最後一個場景')
-  })
-  
-  // 設置邊界嘗試回調
-  globalSwiperController.onBoundaryAttempt((direction: 'prev' | 'next') => {
-    const message = direction === 'prev' ? '已在第一個場景' : '已在最後一個場景'
-    showBoundaryMessage(message)
-  })
 }
 
-const loadSampleScenes = () => {
-  // 示例場景數據
+const loadExhibitionConfig = async (exhibitionId: string) => {
+  console.log(`Loading exhibition config for: ${exhibitionId}`)
+  
+  try {
+    const config = await resourceManager.loadExhibition(exhibitionId)
+    exhibitionConfig.value = config
+    scenes.value = config.scenes
+    
+    console.log(`Loaded ${config.scenes.length} scenes from config`)
+    console.log('Available languages:', config.availableLanguages)
+    
+    // 驗證場景音檔配置和圖片路徑
+    config.scenes.forEach((scene, index) => {
+      const audioLanguages = Object.keys(scene.audio || {})
+      console.log(`Scene ${index + 1} (${scene.id}):`)
+      console.log(`  - Audio languages:`, audioLanguages)
+      console.log(`  - Image URL:`, scene.image.url)
+      console.log(`  - Thumbnail URL:`, scene.image.thumbnail)
+    })
+    
+  } catch (error) {
+    console.error('Failed to load exhibition config:', error)
+    throw error
+  }
+}
+
+const loadFallbackScenes = () => {
+  console.log('Loading fallback scenes...')
+  // 備用場景數據（保留原有的硬編碼場景作為備用）
   scenes.value = [
     {
       id: 'scene-1',
@@ -205,6 +218,40 @@ const loadSampleScenes = () => {
     }
   ]
 }
+
+const initializeSwiper = () => {
+  if (!swiperContainer.value || scenes.value.length === 0) {
+    console.warn('Swiper container not found or no scenes available')
+    return
+  }
+
+  // 初始化 Swiper
+  globalSwiperController.initializeSwiper(swiperContainer.value, scenes.value.length)
+  
+  // 設置事件監聽器
+  globalSwiperController.onSlideChange((index: number) => {
+    console.log(`Swiper slide changed to: ${index}`)
+    currentSceneIndex.value = index
+  })
+  
+  globalSwiperController.onReachBeginning(() => {
+    console.log('Reached beginning of exhibition')
+    showBoundaryMessage('已到達第一個場景')
+  })
+  
+  globalSwiperController.onReachEnd(() => {
+    console.log('Reached end of exhibition')
+    showBoundaryMessage('已到達最後一個場景')
+  })
+  
+  // 設置邊界嘗試回調
+  globalSwiperController.onBoundaryAttempt((direction: 'prev' | 'next') => {
+    const message = direction === 'prev' ? '已在第一個場景' : '已在最後一個場景'
+    showBoundaryMessage(message)
+  })
+}
+
+
 
 const navigateToScene = (index: number) => {
   if (index >= 0 && index < scenes.value.length) {
@@ -272,6 +319,30 @@ const handleImageError = (sceneId: string, error: Event) => {
 const handleNavigationScroll = (direction: 'left' | 'right') => {
   console.log(`Navigation scroll: ${direction}`)
   // 可以在這裡添加額外的滾動邏輯
+}
+
+// 響應式佈局事件處理器
+const handleLayoutChange = (layout: { mode: string; orientation: string; dimensions: { width: number; height: number } }) => {
+  console.log('Layout changed:', layout)
+  
+  // 當佈局改變時，可能需要重新初始化 Swiper
+  if (globalSwiperController.swiperInstance) {
+    globalSwiperController.swiperInstance.update()
+  }
+  
+  // 觸發相鄰場景預載，因為佈局改變可能影響載入策略
+  preloadAdjacentScenes()
+}
+
+const handleOrientationChange = (orientation: 'portrait' | 'landscape') => {
+  console.log('Orientation changed to:', orientation)
+  
+  // 方向改變時更新 Swiper
+  setTimeout(() => {
+    if (globalSwiperController.swiperInstance) {
+      globalSwiperController.swiperInstance.update()
+    }
+  }, 300) // 等待 CSS 轉換完成
 }
 
 // 鍵盤事件處理（作為備用）

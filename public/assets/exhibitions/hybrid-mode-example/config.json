@@ -1,0 +1,150 @@
+{
+  "id": "hybrid-mode-example",
+  "title": "混合模式範例展覽",
+  "description": "展示混合載入模式的範例展覽，結合 API 配置管理與 CDN 媒體加速的最佳實踐",
+  "scenes": [
+    {
+      "id": "scene-1",
+      "title": "雕塑藝術的現代詮釋",
+      "description": {
+        "zh": "現代雕塑藝術跳脫傳統材料的限制，運用新興科技材料和製作工藝，重新詮釋空間與形體的關係。",
+        "en": "Modern sculpture art breaks free from traditional material limitations, using emerging technological materials and craftsmanship to reinterpret the relationship between space and form.",
+        "ja": "現代彫刻芸術は従来の材料の制限から解放され、新興技術材料と製作工芸を使用して、空間と形体の関係を再解釈しています。"
+      },
+      "image": {
+        "url": "modern-sculpture-interpretation.jpg",
+        "alt": "現代雕塑藝術作品",
+        "width": 1920,
+        "height": 1080,
+        "thumbnail": "modern-sculpture-interpretation-thumb.jpg"
+      },
+      "audio": {
+        "zh": {
+          "url": "scene-1-zh.mp3",
+          "duration": 44,
+          "format": "mp3",
+          "size": 704000
+        },
+        "en": {
+          "url": "scene-1-en.mp3",
+          "duration": 47,
+          "format": "mp3",
+          "size": 752000
+        },
+        "ja": {
+          "url": "scene-1-ja.mp3",
+          "duration": 41,
+          "format": "mp3",
+          "size": 656000
+        }
+      },
+      "order": 1,
+      "metadata": {
+        "artist": "現代雕塑藝術家協會",
+        "year": "2024",
+        "medium": "複合材料雕塑",
+        "dimensions": "200 x 150 x 300 cm"
+      }
+    },
+    {
+      "id": "scene-2",
+      "title": "聲音藝術與空間",
+      "description": {
+        "zh": "聲音藝術探索聽覺與空間的關係，透過精心設計的音響環境，創造沉浸式的感官體驗。",
+        "en": "Sound art explores the relationship between hearing and space, creating immersive sensory experiences through carefully designed acoustic environments.",
+        "ja": "サウンドアートは聴覚と空間の関係を探求し、慎重に設計された音響環境を通じて、没入型の感覚体験を創造します。"
+      },
+      "image": {
+        "url": "sound-art-space.jpg",
+        "alt": "聲音藝術空間裝置",
+        "width": 1920,
+        "height": 1080,
+        "thumbnail": "sound-art-space-thumb.jpg"
+      },
+      "audio": {
+        "zh": {
+          "url": "scene-2-zh.mp3",
+          "duration": 51,
+          "format": "mp3",
+          "size": 816000
+        },
+        "en": {
+          "url": "scene-2-en.mp3",
+          "duration": 54,
+          "format": "mp3",
+          "size": 864000
+        },
+        "ja": {
+          "url": "scene-2-ja.mp3",
+          "duration": 48,
+          "format": "mp3",
+          "size": 768000
+        }
+      },
+      "order": 2,
+      "metadata": {
+        "artist": "聲音藝術實驗室",
+        "year": "2024",
+        "medium": "多聲道音響裝置",
+        "dimensions": "環境特定裝置"
+      }
+    },
+    {
+      "id": "scene-3",
+      "title": "生物藝術與科技融合",
+      "description": {
+        "zh": "生物藝術結合生物科學與藝術創作，探討生命、科技與自然之間的複雜關係，開啟藝術創作的新領域。",
+        "en": "Bio-art combines biological science with artistic creation, exploring the complex relationships between life, technology, and nature, opening new fields of artistic creation.",
+        "ja": "バイオアートは生物科学と芸術創作を組み合わせ、生命、技術、自然の間の複雑な関係を探求し、芸術創作の新しい分野を開拓しています。"
+      },
+      "image": {
+        "url": "bio-art-technology.jpg",
+        "alt": "生物藝術與科技融合展示",
+        "width": 1920,
+        "height": 1080,
+        "thumbnail": "bio-art-technology-thumb.jpg"
+      },
+      "audio": {
+        "zh": {
+          "url": "scene-3-zh.mp3",
+          "duration": 56,
+          "format": "mp3",
+          "size": 896000
+        },
+        "en": {
+          "url": "scene-3-en.mp3",
+          "duration": 59,
+          "format": "mp3",
+          "size": 944000
+        },
+        "ja": {
+          "url": "scene-3-ja.mp3",
+          "duration": 53,
+          "format": "mp3",
+          "size": 848000
+        }
+      },
+      "order": 3,
+      "metadata": {
+        "artist": "生物藝術研究中心",
+        "year": "2024",
+        "medium": "生物材料與數位技術",
+        "dimensions": "實驗室規模裝置"
+      }
+    }
+  ],
+  "defaultLanguage": "zh",
+  "availableLanguages": ["zh", "en", "ja"],
+  "resourceConfig": {
+    "mode": "hybrid",
+    "apiEndpoint": "https://api.example.com/exhibitions",
+    "cdnBaseUrl": "https://cdn.example.com/exhibitions/",
+    "fallbackStrategy": "static"
+  },
+  "settings": {
+    "autoplay": false,
+    "showThumbnails": true,
+    "enableKeyboard": true,
+    "preloadCount": 2
+  }
+}

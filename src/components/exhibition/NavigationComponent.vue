@@ -47,7 +47,8 @@
           :class="[
             'navigation-item flex-shrink-0 transition-all duration-300 ease-in-out',
             'flex items-center justify-center',
-            'w-12 h-12',
+            // 響應式按鈕大小 - 確保觸控友好但保持小點點外觀
+            'w-12 h-12 sm:w-14 sm:h-14 md:w-12 md:h-12',
             'hover:scale-110',
             // 添加跳轉動畫類別
             isJumping && jumpTargetIndex === index ? 'animate-pulse' : ''
@@ -68,8 +69,9 @@
             />
           </div>
           
-          <!-- 純點點模式 -->
+          <!-- 純點點模式 - 保持小點點設計 -->
           <div 
+            v-else
             :class="[
               'w-3 h-3 rounded-full transition-all duration-300',
               currentIndex === index 
@@ -92,7 +94,7 @@
           :key="`expanded-${scene.id}`"
           @click="handleSceneClick(index)"
           :class="[
-            'thumbnail-item aspect-video rounded-lg overflow-hidden',
+            'thumbnail-item aspect-video rounded-lg overflow-hidden relative',
             'border-2 transition-all duration-300',
             currentIndex === index 
               ? 'border-blue-600 shadow-lg' 

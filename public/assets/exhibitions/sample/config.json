@@ -12,11 +12,11 @@
         "ja": "オンライン展示システムへようこそ。これは最初の展示シーンです。"
       },
       "image": {
-        "url": "scene-1.jpg",
+        "url": "scene-1.svg",
         "alt": "第一個場景的展示圖片",
         "width": 1920,
         "height": 1080,
-        "thumbnail": "scene-1-thumb.jpg"
+        "thumbnail": "scene-1.svg"
       },
       "audio": {
         "zh": {
@@ -26,7 +26,7 @@
           "size": 480000
         },
         "en": {
-          "url": "scene-1-zh.mp3",
+          "url": "scene-1-en.mp3",
           "duration": 32,
           "format": "mp3",
           "size": 512000
@@ -49,11 +49,11 @@
         "ja": "これは2番目の展示シーンで、システムのスワイプナビゲーション機能を紹介しています。"
       },
       "image": {
-        "url": "scene-2.jpg",
+        "url": "scene-2.svg",
         "alt": "第二個場景的展示圖片",
         "width": 1920,
         "height": 1080,
-        "thumbnail": "scene-2-thumb.jpg"
+        "thumbnail": "scene-2.svg"
       },
       "audio": {
         "zh": {
