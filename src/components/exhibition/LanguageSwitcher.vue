@@ -1,21 +1,58 @@
 <template>
-  <div class="language-switcher">
-    <label class="block text-sm font-medium text-gray-700 mb-2">
-      {{ $t('language.select') }}
-    </label>
-    <select
-      v-model="selectedLanguage"
-      @change="handleLanguageChange"
-      class="block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
-    >
-      <option
-        v-for="language in availableLanguages"
-        :key="language"
-        :value="language"
-      >
-        {{ getLanguageDisplayName(language) }}
-      </option>
-    </select>
+  <div class="language-switcher relative z-50">
+    <div class="flex items-center gap-2">
+      <span class="text-xs text-zinc-500 font-serif tracking-widest uppercase mb-1 block md:hidden">{{ $t('language.select') }}</span>
+      
+      <div class="relative">
+        <button 
+          @click="isOpen = !isOpen"
+          class="flex items-center gap-2 px-3 py-1.5 rounded-full border border-gold/30 hover:border-gold/80 bg-black/20 text-gold text-sm font-serif transition-all duration-300 hover:bg-gold/10"
+        >
+          <span>{{ getLanguageDisplayName(selectedLanguage) }}</span>
+          <svg 
+            class="w-3 h-3 transition-transform duration-300" 
+            :class="{ 'rotate-180': isOpen }"
+            fill="none" 
+            stroke="currentColor" 
+            viewBox="0 0 24 24"
+          >
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+          </svg>
+        </button>
+
+        <!-- Dropdown Menu -->
+        <transition
+          enter-active-class="transition duration-200 ease-out"
+          enter-from-class="transform scale-95 opacity-0"
+          enter-to-class="transform scale-100 opacity-100"
+          leave-active-class="transition duration-150 ease-in"
+          leave-from-class="transform scale-100 opacity-100"
+          leave-to-class="transform scale-95 opacity-0"
+        >
+          <div 
+            v-if="isOpen"
+            class="absolute top-full left-0 mt-2 w-32 py-1 bg-dark-surface border border-gold/20 rounded-lg shadow-xl backdrop-blur-md overflow-hidden"
+          >
+            <button
+              v-for="language in availableLanguages"
+              :key="language"
+              @click="selectLanguage(language)"
+              class="w-full text-left px-4 py-2 text-sm text-zinc-400 hover:text-gold hover:bg-white/5 transition-colors font-serif"
+              :class="{ 'text-gold bg-white/5': selectedLanguage === language }"
+            >
+              {{ getLanguageDisplayName(language) }}
+            </button>
+          </div>
+        </transition>
+      </div>
+
+      <!-- Overlay to close dropdown when clicking outside -->
+      <div 
+        v-if="isOpen" 
+        @click="isOpen = false"
+        class="fixed inset-0 z-[-1]"
+      ></div>
+    </div>
   </div>
 </template>
 
@@ -41,10 +78,11 @@ const props = withDefaults(defineProps<Props>(), {
 const emit = defineEmits<Emits>()
 
 const selectedLanguage = ref<string>(props.modelValue || props.defaultLanguage)
+const isOpen = ref(false)
 
 // 語言顯示名稱映射
 const languageNames: Record<string, string> = {
-  zh: '中文',
+  zh: '繁體中文',
   en: 'English',
   ja: '日本語',
   ko: '한국어',
@@ -55,6 +93,12 @@ const languageNames: Record<string, string> = {
 
 const getLanguageDisplayName = (languageCode: string): string => {
   return languageNames[languageCode] || languageCode.toUpperCase()
+}
+
+const selectLanguage = (language: string) => {
+  selectedLanguage.value = language
+  isOpen.value = false
+  handleLanguageChange()
 }
 
 const handleLanguageChange = () => {
@@ -102,18 +146,6 @@ const $t = (key: string): string => {
 
 <style scoped>
 .language-switcher {
-  @apply mb-4;
-}
-
-.language-switcher select {
-  transition: all 0.2s ease-in-out;
-}
-
-.language-switcher select:hover {
-  @apply border-gray-400;
-}
-
-.language-switcher select:focus {
-  @apply ring-2 ring-blue-500 ring-opacity-50;
+  position: relative;
 }
 </style>

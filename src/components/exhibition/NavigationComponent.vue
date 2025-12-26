@@ -1,116 +1,85 @@
 <template>
-  <div class="navigation-container fixed bottom-0 w-full bg-white border-t border-gray-200 z-10">
-    <!-- 滾動控制按鈕 (僅在有溢出時顯示) -->
-    <div v-if="hasOverflow" class="absolute left-2 top-1/2 transform -translate-y-1/2 z-20">
-      <button
-        v-if="canScrollLeft"
-        @click="scrollLeft"
-        class="w-8 h-8 bg-white border border-gray-300 rounded-full shadow-md hover:shadow-lg transition-all duration-200 flex items-center justify-center"
-        aria-label="向左滾動導覽列"
-      >
-        <svg class="w-4 h-4 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path>
-        </svg>
-      </button>
-    </div>
-    
-    <div v-if="hasOverflow" class="absolute right-2 top-1/2 transform -translate-y-1/2 z-20">
-      <button
-        v-if="canScrollRight"
-        @click="scrollRight"
-        class="w-8 h-8 bg-white border border-gray-300 rounded-full shadow-md hover:shadow-lg transition-all duration-200 flex items-center justify-center"
-        aria-label="向右滾動導覽列"
-      >
-        <svg class="w-4 h-4 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
-        </svg>
-      </button>
-    </div>
-
-    <!-- 基本導覽列 -->
-    <div class="flex items-center justify-center h-16 px-4">
-      <div 
-        ref="navigationScrollContainer"
-        class="flex space-x-3 overflow-x-auto max-w-full scroll-smooth"
-        :class="{ 
-          'justify-center': !hasOverflow, 
-          'justify-start': hasOverflow,
-          'px-10': hasOverflow // 為滾動按鈕留出空間
-        }"
-        @scroll="handleScroll"
-      >
+  <div class="navigation-container pb-6 pt-12 bg-linear-to-t from-black/90 to-transparent pointer-events-none transition-opacity duration-700">
+    <div class="pointer-events-auto relative max-w-4xl mx-auto px-4">
+      <!-- 滾動控制按鈕 (僅在有溢出時顯示) -->
+      <div v-if="hasOverflow" class="absolute left-0 top-1/2 transform -translate-y-1/2 z-20">
         <button
-          v-for="(scene, index) in scenes"
-          :key="scene.id"
-          ref="navigationItems"
-          @click="handleSceneClick(index)"
-          :class="[
-            'navigation-item flex-shrink-0 transition-all duration-300 ease-in-out',
-            'flex items-center justify-center',
-            // 響應式按鈕大小 - 確保觸控友好但保持小點點外觀
-            'w-12 h-12 sm:w-14 sm:h-14 md:w-12 md:h-12',
-            'hover:scale-110',
-            // 添加跳轉動畫類別
-            isJumping && jumpTargetIndex === index ? 'animate-pulse' : ''
-          ]"
-          :aria-label="`跳轉到場景 ${index + 1}: ${scene.title}`"
-          :aria-current="currentIndex === index ? 'true' : 'false'"
+          v-if="canScrollLeft"
+          @click="scrollLeft"
+          class="w-8 h-8 rounded-full bg-black/40 hover:bg-gold/80 text-white hover:text-black border border-white/20 hover:border-gold transition-all duration-300 flex items-center justify-center backdrop-blur-xs"
+          aria-label="向左滾動導覽列"
         >
-          <!-- 縮圖模式 -->
-          <div 
-            v-if="showThumbnails && scene.image.thumbnail"
-            class="w-10 h-6 rounded overflow-hidden"
-          >
-            <img
-              :src="scene.image.thumbnail"
-              :alt="scene.image.alt"
-              class="w-full h-full object-cover"
-              loading="lazy"
-            />
-          </div>
-          
-          <!-- 純點點模式 - 保持小點點設計 -->
-          <div 
-            v-else
-            :class="[
-              'w-3 h-3 rounded-full transition-all duration-300',
-              currentIndex === index 
-                ? 'bg-blue-600' 
-                : 'bg-gray-400'
-            ]"
-          />
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path>
+          </svg>
         </button>
       </div>
-    </div>
-    
-    <!-- 展開的縮圖檢視 (可選功能) -->
-    <div 
-      v-if="showExpandedThumbnails"
-      class="expanded-thumbnails bg-white border-t border-gray-200 p-4"
-    >
-      <div class="grid grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-3">
+      
+      <div v-if="hasOverflow" class="absolute right-0 top-1/2 transform -translate-y-1/2 z-20">
         <button
-          v-for="(scene, index) in scenes"
-          :key="`expanded-${scene.id}`"
-          @click="handleSceneClick(index)"
-          :class="[
-            'thumbnail-item aspect-video rounded-lg overflow-hidden relative',
-            'border-2 transition-all duration-300',
-            currentIndex === index 
-              ? 'border-blue-600 shadow-lg' 
-              : 'border-gray-300 hover:border-gray-400'
-          ]"
+          v-if="canScrollRight"
+          @click="scrollRight"
+          class="w-8 h-8 rounded-full bg-black/40 hover:bg-gold/80 text-white hover:text-black border border-white/20 hover:border-gold transition-all duration-300 flex items-center justify-center backdrop-blur-xs"
+          aria-label="向右滾動導覽列"
         >
-          <img
-            :src="scene.image.thumbnail || scene.image.url"
-            :alt="scene.image.alt"
-            class="w-full h-full object-cover"
-            loading="lazy"
-          />
-          <div class="absolute bottom-0 left-0 right-0 bg-black bg-opacity-60 text-white text-xs p-1">
-            {{ scene.title }}
-          </div>
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+          </svg>
         </button>
+      </div>
+
+      <!-- 基本導覽列 -->
+      <div class="flex items-center justify-center py-4">
+        <div 
+          ref="navigationScrollContainer"
+          class="flex items-center gap-4 px-6 py-3 glass-pill"
+          :class="{ 
+            'overflow-x-auto max-w-[80vw] justify-start': hasOverflow,
+            'justify-center': !hasOverflow
+          }"
+          @scroll="handleScroll"
+        >
+          <button
+            v-for="(scene, index) in scenes"
+            :key="scene.id"
+            ref="navigationItems"
+            @click="handleSceneClick(index)"
+            :class="[
+              'navigation-item flex-shrink-0 transition-all duration-500 ease-out group relative',
+              'flex items-center justify-center',
+              'w-4 h-4', 
+            ]"
+            :aria-label="`跳轉到場景 ${index + 1}: ${scene.title}`"
+            :aria-current="currentIndex === index ? 'true' : 'false'"
+          >
+            <!-- 連結線 (裝飾) - 僅在非溢出模式下顯示 -->
+            <div 
+               v-if="!hasOverflow && index < scenes.length - 1"
+               class="absolute left-1/2 top-1/2 h-px bg-white/10 -z-10"
+               style="left: 100%; width: 1rem;"
+            ></div>
+
+            <!-- 純點點模式 - Gold Leaf Style -->
+            <div 
+              :class="[
+                'rounded-full transition-all duration-500 relative',
+                currentIndex === index 
+                  ? 'w-2.5 h-2.5 bg-gold shadow-[0_0_8px_#CFB53B]' 
+                  : 'w-1.5 h-1.5 bg-white/40 group-hover:bg-white/80 group-hover:scale-125'
+              ]"
+            >
+               <!-- Active Indicator Ring -->
+               <div v-if="currentIndex === index" class="absolute -inset-1.5 border border-gold/40 rounded-full"></div>
+            </div>
+            
+            <!-- Tooltip on hover -->
+            <div class="absolute bottom-full mb-4 opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none whitespace-nowrap">
+              <span class="bg-black/90 text-gold text-xs px-3 py-1.5 rounded-sm border border-gold/20 backdrop-blur-md font-serif tracking-widest min-w-max shadow-xl">
+                {{ scene.title }}
+              </span>
+            </div>
+          </button>
+        </div>
       </div>
     </div>
   </div>
@@ -309,8 +278,11 @@ defineExpose({
 <style scoped>
 .navigation-container {
   /* 確保導覽列在最上層 */
-  z-index: 50;
-  position: relative;
+  z-index: 100;
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  width: 100%;
 }
 
 .navigation-item {

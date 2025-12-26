@@ -1,7 +1,19 @@
 <template>
-  <div class="exhibition-container">
+  <div class="exhibition-container relative bg-black">
+    <!-- Global Language Switcher -->
+    <div 
+      class="fixed top-6 right-6 z-50 transition-opacity duration-700 ease-in-out"
+      :class="{ 'opacity-0 pointer-events-none': isUserIdle && currentLayoutMode === 'desktop' }"
+    >
+      <LanguageSwitcher
+        :model-value="currentLanguage"
+        :available-languages="globalAvailableLanguages"
+        @update:model-value="handleGlobalLanguageChange"
+      />
+    </div>
+
     <!-- Swiper 容器 -->
-    <div ref="swiperContainer" class="swiper w-full" style="height: calc(100vh - 4rem);">
+    <div ref="swiperContainer" class="swiper w-full h-full">
       <div class="swiper-wrapper">
         <div
           v-for="(scene, index) in scenes"
@@ -27,10 +39,13 @@
             
             <!-- 內容面板區域 -->
             <template #content="{ layoutMode }">
-              <div class="p-4 h-full overflow-y-auto">
+              <div 
+                class="p-4 h-full overflow-y-auto swiper-no-swiping transition-opacity duration-700 ease-in-out"
+                :class="{ 'opacity-0 pointer-events-none': isUserIdle && layoutMode === 'desktop' }"
+              >
                 <AudioGuideComponent
                   :scene="scene"
-                  :default-language="'zh'"
+                  :default-language="currentLanguage"
                   :layout-mode="layoutMode"
                 />
               </div>
@@ -41,13 +56,15 @@
     </div>
     
     <!-- 底部導覽列 -->
-    <NavigationComponent
-      :scenes="scenes"
-      :current-index="currentSceneIndex"
-      :show-thumbnails="false"
-      @scene-selected="navigateToScene"
-      @navigation-scroll="handleNavigationScroll"
-    />
+    <div class="transition-opacity duration-700 ease-in-out" :class="{ 'opacity-0 pointer-events-none': isUserIdle && currentLayoutMode === 'desktop' }">
+      <NavigationComponent
+        :scenes="scenes"
+        :current-index="currentSceneIndex"
+        :show-thumbnails="false"
+        @scene-selected="navigateToScene"
+        @navigation-scroll="handleNavigationScroll"
+      />
+    </div>
     
     <!-- 邊界提示 -->
     <div
@@ -72,6 +89,7 @@ import SceneComponent from './SceneComponent.vue'
 import NavigationComponent from './NavigationComponent.vue'
 import AudioGuideComponent from './AudioGuideComponent.vue'
 import ResponsiveLayout from './ResponsiveLayout.vue'
+import LanguageSwitcher from './LanguageSwitcher.vue'
 import { globalImageLoader } from '@/services/ImageLoader'
 import { globalSwiperController } from '@/services/SwiperController'
 import { ResourceManager } from '@/services/ResourceManager'
@@ -85,6 +103,8 @@ const showBoundaryHint = ref(false)
 const exhibitionConfig = ref<ExhibitionConfig | null>(null)
 const isLoading = ref(true)
 const loadError = ref<string>('')
+const currentLanguage = ref('zh')
+const currentLayoutMode = ref('desktop')
 
 // ResourceManager 實例
 const resourceConfig: ResourceConfig = {
@@ -95,8 +115,76 @@ const resourceConfig: ResourceConfig = {
 const resourceManager = new ResourceManager(resourceConfig)
 
 // 計算屬性
+
+// 計算屬性
 const currentScene = computed(() => {
   return scenes.value[currentSceneIndex.value] || null
+})
+
+const globalAvailableLanguages = computed(() => {
+  if (exhibitionConfig.value?.availableLanguages) {
+    return exhibitionConfig.value.availableLanguages
+  }
+  return ['zh', 'en'] // Fallback
+})
+
+const handleGlobalLanguageChange = (lang: string) => {
+  currentLanguage.value = lang
+  localStorage.setItem('exhibition-language', lang)
+}
+
+// Immersive Mode (Auto-hide UI)
+const isUserIdle = ref(false)
+let idleTimer: number | null = null
+
+const resetIdleTimer = () => {
+  isUserIdle.value = false
+  if (idleTimer) window.clearTimeout(idleTimer)
+  idleTimer = window.setTimeout(() => {
+    isUserIdle.value = true
+  }, 3000) // 3 seconds idle
+}
+
+const updateGlobalLayoutMode = () => {
+  const width = window.innerWidth
+  // Consider mobile (<768) and tablet (<1024) as "mobile" layout mode for global UI persistence
+  if (width < 1024) {
+    currentLayoutMode.value = 'mobile'
+  } else {
+    currentLayoutMode.value = 'desktop'
+  }
+}
+
+onMounted(() => {
+  initializeExhibition()
+  // 添加鍵盤事件監聽器作為備用
+  document.addEventListener('keydown', handleKeydown)
+  
+  // Update global layout mode separately to ensure UI persistence
+  updateGlobalLayoutMode()
+  window.addEventListener('resize', updateGlobalLayoutMode)
+  
+  // Idle tracking
+  window.addEventListener('mousemove', resetIdleTimer)
+  window.addEventListener('click', resetIdleTimer)
+  window.addEventListener('touchstart', resetIdleTimer)
+  window.addEventListener('scroll', resetIdleTimer)
+  resetIdleTimer()
+})
+
+onUnmounted(() => {
+  // 清理 Swiper 實例
+  globalSwiperController.destroySwiper()
+  // 移除鍵盤事件監聽器
+  document.removeEventListener('keydown', handleKeydown)
+  window.removeEventListener('resize', updateGlobalLayoutMode)
+  
+  // Cleanup idle tracking
+  if (idleTimer) window.clearTimeout(idleTimer)
+  window.removeEventListener('mousemove', resetIdleTimer)
+  window.removeEventListener('click', resetIdleTimer)
+  window.removeEventListener('touchstart', resetIdleTimer)
+  window.removeEventListener('scroll', resetIdleTimer)
 })
 
 // 基本方法定義
@@ -324,6 +412,7 @@ const handleNavigationScroll = (direction: 'left' | 'right') => {
 // 響應式佈局事件處理器
 const handleLayoutChange = (layout: { mode: string; orientation: string; dimensions: { width: number; height: number } }) => {
   console.log('Layout changed:', layout)
+  currentLayoutMode.value = layout.mode
   
   // 當佈局改變時，可能需要重新初始化 Swiper
   if (globalSwiperController.swiperInstance) {
@@ -358,19 +447,6 @@ const handleKeydown = (event: KeyboardEvent) => {
       break
   }
 }
-
-onMounted(() => {
-  initializeExhibition()
-  // 添加鍵盤事件監聽器作為備用
-  document.addEventListener('keydown', handleKeydown)
-})
-
-onUnmounted(() => {
-  // 清理 Swiper 實例
-  globalSwiperController.destroySwiper()
-  // 移除鍵盤事件監聽器
-  document.removeEventListener('keydown', handleKeydown)
-})
 
 // 暴露方法供外部使用
 defineExpose({

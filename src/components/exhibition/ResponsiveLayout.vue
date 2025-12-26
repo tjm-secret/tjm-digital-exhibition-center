@@ -7,19 +7,25 @@
     ]"
     :style="layoutStyles"
   >
-    <!-- Desktop Layout: Left-Right Split -->
+    <!-- Desktop Layout: Full Screen Image with Overlay Content -->
     <div 
       v-if="isDesktop"
-      class="desktop-layout flex h-full"
+      class="desktop-layout relative w-full h-full overflow-hidden bg-black"
     >
-      <!-- Left Side: Image Display (70% width on lg, 75% on xl+) -->
-      <div class="image-section lg:w-2/3 xl:w-3/4 2xl:w-4/5 h-full">
+      <!-- Background Image Layer (Full Width/Height) -->
+      <div class="image-section absolute inset-0 z-0 transition-transform duration-700 ease-in-out">
         <slot name="image" :layout-mode="'desktop'" />
       </div>
       
-      <!-- Right Side: Content Panel (30% width on lg, 25% on xl+) -->
-      <div class="content-section lg:w-1/3 xl:w-1/4 2xl:w-1/5 h-full bg-gray-50 border-l border-gray-200">
-        <slot name="content" :layout-mode="'desktop'" />
+      <!-- Content Overlay Panel (Right Side, Semi-transparent) -->
+      <div class="content-section absolute top-0 right-0 h-full w-[35%] max-w-[500px] z-10 transition-transform duration-500 ease-out translate-x-0">
+        <!-- Gradient Shade behind text -->
+        <div class="absolute inset-0 bg-linear-to-l from-black/90 via-black/70 to-transparent pointer-events-none"></div>
+        
+        <!-- Interactive Content Container -->
+        <div class="relative h-full overflow-y-auto px-8 py-12 flex flex-col justify-center">
+            <slot name="content" :layout-mode="'desktop'" />
+        </div>
       </div>
     </div>
 
@@ -41,7 +47,7 @@
       <!-- Bottom: Content Panel (40% height in portrait, 50% in landscape) -->
       <div 
         :class="[
-          'content-section bg-gray-50 border-t border-gray-200',
+          'content-section bg-zinc-950 border-t border-gold/30',
           isLandscape ? 'h-1/2' : 'h-2/5'
         ]"
       >
@@ -67,7 +73,7 @@
       <!-- Bottom: Content Panel (50% height in portrait, 40% in landscape) -->
       <div 
         :class="[
-          'content-section bg-gray-50 border-t border-gray-200',
+          'content-section bg-zinc-950 border-t border-gold/30',
           isLandscape ? 'h-2/5' : 'h-1/2'
         ]"
       >

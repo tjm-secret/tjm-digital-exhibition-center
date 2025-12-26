@@ -11,20 +11,33 @@
       </div>
     </div>
 
+    <!-- Background: Ambient Blur -->
+    <div v-if="scene?.image?.url" class="absolute inset-0 z-0 overflow-hidden pointer-events-none">
+       <img 
+        :src="scene.image.url" 
+        class="w-full h-full object-cover blur-3xl opacity-60 scale-110 brightness-75"
+        alt=""
+        aria-hidden="true"
+      />
+      <div class="absolute inset-0 bg-black/20 backdrop-blur-sm"></div>
+    </div>
+
     <!-- Scene Content -->
-    <div v-else class="w-full h-full">
+    <div v-if="!isLoading" class="w-full h-full">
       <!-- Image Display -->
       <div class="scene-image-container w-full h-full relative overflow-hidden">
         <img
           ref="sceneImageRef"
           :src="scene.image.url"
           :alt="scene.image.alt"
+          draggable="false"
           :class="[
-            'scene-image w-full h-full object-contain transition-opacity duration-300',
-            imageLoaded ? 'opacity-100' : 'opacity-0'
+            'scene-image w-full h-full object-contain transition-all duration-1000 ease-out select-none',
+            imageLoaded ? 'opacity-100 scale-100' : 'opacity-0 scale-105'
           ]"
           @load="handleImageLoad"
           @error="handleImageError"
+          @dragstart.prevent
         />
         
         <!-- Image Loading Placeholder -->

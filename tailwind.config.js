@@ -6,6 +6,23 @@ export default {
   ],
   theme: {
     extend: {
+      colors: {
+        gold: {
+          DEFAULT: '#CFB53B',
+          light: '#E5C565',
+          dark: '#B49B2F',
+        },
+        dark: {
+          bg: '#1a1a1a',
+          surface: '#252525',
+          overlay: 'rgba(26, 26, 26, 0.8)',
+        }
+      },
+      fontFamily: {
+        serif: ['"Shippori Mincho"', '"Cormorant Garamond"', 'serif'],
+        sans: ['"Inter"', 'sans-serif'],
+        display: ['"Cormorant Garamond"', 'serif'],
+      },
       screens: {
         'sm': '640px',
         'md': '768px', 

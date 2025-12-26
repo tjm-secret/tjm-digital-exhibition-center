@@ -73,12 +73,13 @@ export class SwiperController {
       longSwipesMs: 300,
       followFinger: true,
       shortSwipes: true,
-      threshold: 10,
+      threshold: 5, // Lower threshold for easier swiping
       touchMoveStopPropagation: false,
       simulateTouch: true,
+      grabCursor: true, // Show grab cursor to indicate swipeability
       touchStartPreventDefault: false,
       touchStartForcePreventDefault: false,
-      touchReleaseOnEdges: false,
+      touchReleaseOnEdges: true,
       
       // 邊界保護配置
       resistance: true,
@@ -404,23 +405,25 @@ export class SwiperController {
   /**
    * 處理觸控開始事件
    */
-  private handleTouchStart(event: TouchEvent): void {
-    // 記錄觸控開始時間，用於區分快速滑動和慢速滑動
-    const touchStartTime = Date.now()
-    
-    // 在觸控裝置上提供觸覺回饋
-    if ('vibrate' in navigator && event.touches.length === 1) {
-      // 輕微震動表示觸控開始
-      navigator.vibrate(10)
+  private handleTouchStart(event: TouchEvent | MouseEvent | PointerEvent): void {
+    // Check if it's a touch event with touches
+    if ('touches' in event && event.touches.length > 0) {
+      // 記錄觸控開始時間
+      // const touchStartTime = Date.now()
+      
+      // 在觸控裝置上提供觸覺回饋
+      if ('vibrate' in navigator && event.touches.length === 1) {
+        navigator.vibrate(10)
+      }
     }
   }
 
   /**
    * 處理觸控移動事件
    */
-  private handleTouchMove(event: TouchEvent): void {
-    // 防止在滑動時意外觸發其他手勢
-    if (event.touches.length > 1) {
+  private handleTouchMove(event: TouchEvent | MouseEvent | PointerEvent): void {
+    // Check if it's a touch event
+    if ('touches' in event && event.touches.length > 1) {
       event.preventDefault()
     }
   }
@@ -428,7 +431,7 @@ export class SwiperController {
   /**
    * 處理觸控結束事件
    */
-  private handleTouchEnd(event: TouchEvent): void {
+  private handleTouchEnd(event: TouchEvent | MouseEvent | PointerEvent): void {
     // 觸控結束時的處理邏輯
     // 可以在這裡添加額外的觸控回饋
   }
