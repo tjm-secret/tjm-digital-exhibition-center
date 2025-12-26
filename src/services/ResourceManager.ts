@@ -102,22 +102,24 @@ export class ResourceManager {
     
     config.scenes.forEach((scene: Scene) => {
       // Resolve image URLs
-      if (!scene.image.url.startsWith('http')) {
+      if (scene.image?.url && !scene.image.url.startsWith('http')) {
         scene.image.url = `${basePath}images/${scene.image.url}`
       }
       
       // Resolve thumbnail URLs if present
-      if (scene.image.thumbnail && !scene.image.thumbnail.startsWith('http')) {
+      if (scene.image?.thumbnail && !scene.image.thumbnail.startsWith('http')) {
         scene.image.thumbnail = `${basePath}images/${scene.image.thumbnail}`
       }
       
       // Resolve audio URLs for all languages
-      Object.keys(scene.audio).forEach(lang => {
-        const audioFile = scene.audio[lang]
-        if (audioFile && !audioFile.url.startsWith('http')) {
-          audioFile.url = `${basePath}audio/${audioFile.url}`
-        }
-      })
+      if (scene.audio) {
+        Object.keys(scene.audio).forEach(lang => {
+          const audioFile = scene.audio[lang]
+          if (audioFile?.url && !audioFile.url.startsWith('http')) {
+            audioFile.url = `${basePath}audio/${audioFile.url}`
+          }
+        })
+      }
     })
     
     return config
@@ -139,22 +141,24 @@ export class ResourceManager {
     
     config.scenes.forEach((scene: Scene) => {
       // Resolve image URLs to CDN if they are relative paths
-      if (!scene.image.url.startsWith('http')) {
+      if (scene.image?.url && !scene.image.url.startsWith('http')) {
         scene.image.url = `${cdnBase}${scene.image.url}`
       }
       
       // Resolve thumbnail URLs to CDN if present and relative
-      if (scene.image.thumbnail && !scene.image.thumbnail.startsWith('http')) {
+      if (scene.image?.thumbnail && !scene.image.thumbnail.startsWith('http')) {
         scene.image.thumbnail = `${cdnBase}${scene.image.thumbnail}`
       }
       
       // Resolve audio URLs to CDN for all languages
-      Object.keys(scene.audio).forEach(lang => {
-        const audioFile = scene.audio[lang]
-        if (audioFile && !audioFile.url.startsWith('http')) {
-          audioFile.url = `${cdnBase}${audioFile.url}`
-        }
-      })
+      if (scene.audio) {
+        Object.keys(scene.audio).forEach(lang => {
+          const audioFile = scene.audio[lang]
+          if (audioFile?.url && !audioFile.url.startsWith('http')) {
+            audioFile.url = `${cdnBase}${audioFile.url}`
+          }
+        })
+      }
     })
     
     return config

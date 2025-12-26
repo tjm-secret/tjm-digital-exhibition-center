@@ -195,10 +195,12 @@ describe('AudioManager Property Tests', () => {
           // 播放第一個音訊檔案
           if (audioFiles.length > 0) {
             const firstAudio = audioFiles[0]
-            await audioManager.playAudio(firstAudio.url, firstAudio.language)
+            if (firstAudio) {
+              await audioManager.playAudio(firstAudio.url, firstAudio.language)
             
-            // 驗證當前語言設定正確
-            expect(audioManager.getCurrentLanguage()).toBe(firstAudio.language)
+              // Verify language state matches playing audio
+              expect(audioManager.getCurrentLanguage()).toBe(firstAudio.language)
+            }
             
             // 驗證時間相關方法返回合理值
             expect(audioManager.getCurrentTime()).toBeGreaterThanOrEqual(0)

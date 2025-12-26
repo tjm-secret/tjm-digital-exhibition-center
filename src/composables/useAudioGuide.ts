@@ -107,7 +107,92 @@ export function useAudioGuide(defaultLanguage: string = 'zh') {
     }
   }
 
-  // 清理資源
+  // Helper functions
+  const handleProgress = (val: number) => {
+    if (duration.value > 0) {
+      currentTime.value = val * duration.value
+    }
+  }
+
+  const handleLoad = (success: boolean) => {
+    isLoading.value = false
+    if (!success) errorMessage.value = 'Failed to load audio'
+  }
+
+  const updatePlaybackState = () => {
+    isPlaying.value = audioManager.isPlaying()
+    currentTime.value = audioManager.getCurrentTime()
+    duration.value = audioManager.getDuration()
+  }
+
+  // Implementation of missing methods
+  const pauseAudio = () => audioManager.pauseAudio()
+  
+  const stopAudio = () => {
+    audioManager.stopAudio()
+    currentTime.value = 0
+    isPlaying.value = false
+    savedProgress = 0
+  }
+
+  const togglePlayPause = async () => {
+    if (isPlaying.value) {
+      pauseAudio()
+    } else {
+      await playAudio()
+    }
+  }
+
+  const replayAudio = async () => {
+    stopAudio()
+    await playAudio()
+  }
+
+  const setVolume = (val: number) => {
+    volume.value = val
+    audioManager.setVolume(val)
+  }
+
+  const seekTo = (time: number) => {
+    audioManager.seek(time)
+    currentTime.value = time
+  }
+
+  const seekToProgress = (pct: number) => {
+    if (duration.value > 0) {
+      seekTo(pct * duration.value)
+    }
+  }
+
+  const switchLanguage = async (lang: string) => {
+    if (lang === currentLanguage.value) return
+    
+    // Save progress
+    if (duration.value > 0) {
+      savedProgress = currentTime.value / duration.value
+    }
+    
+    currentLanguage.value = lang
+    
+    if (isPlaying.value) {
+      await playAudio()
+    }
+  }
+
+  const loadScene = (scene: Scene) => {
+    currentScene.value = scene
+    stopAudio()
+  }
+
+  const preloadLanguages = async (scene: Scene) => {
+    // preload logic
+  }
+
+  const retryLoad = async () => {
+    await playAudio()
+  }
+  
+  // Clean up
   const cleanup = (): void => {
     audioManager.cleanup()
   }

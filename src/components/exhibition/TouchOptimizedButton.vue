@@ -123,6 +123,8 @@ const handleTouchStart = (event: TouchEvent) => {
   
   // 創建漣漪效果
   const touch = event.touches[0]
+  if (!touch) return
+
   const rect = (event.currentTarget as HTMLElement).getBoundingClientRect()
   const x = touch.clientX - rect.left
   const y = touch.clientY - rect.top

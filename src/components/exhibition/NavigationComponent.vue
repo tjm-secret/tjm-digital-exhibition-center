@@ -6,7 +6,7 @@
         <button
           v-if="canScrollLeft"
           @click="scrollLeft"
-          class="w-8 h-8 rounded-full bg-black/40 hover:bg-gold/80 text-white hover:text-black border border-white/20 hover:border-gold transition-all duration-300 flex items-center justify-center backdrop-blur-xs"
+          class="w-8 h-8 rounded-full bg-black/40 hover:bg-gold/80 text-white hover:text-black border border-white/20 hover:border-gold transition-all duration-300 items-center justify-center backdrop-blur-xs hidden sm:flex"
           aria-label="向左滾動導覽列"
         >
           <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -19,7 +19,7 @@
         <button
           v-if="canScrollRight"
           @click="scrollRight"
-          class="w-8 h-8 rounded-full bg-black/40 hover:bg-gold/80 text-white hover:text-black border border-white/20 hover:border-gold transition-all duration-300 flex items-center justify-center backdrop-blur-xs"
+          class="w-8 h-8 rounded-full bg-black/40 hover:bg-gold/80 text-white hover:text-black border border-white/20 hover:border-gold transition-all duration-300 items-center justify-center backdrop-blur-xs hidden sm:flex"
           aria-label="向右滾動導覽列"
         >
           <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -47,9 +47,9 @@
             :class="[
               'navigation-item flex-shrink-0 transition-all duration-500 ease-out group relative',
               'flex items-center justify-center',
-              'w-4 h-4', 
+              'w-4 h-4 sm:min-w-0 sm:h-auto min-w-[50px] h-[40px] sm:min-w-auto sm:h-auto', // Mobile: larger touch area, Desktop: standard
             ]"
-            :aria-label="`跳轉到場景 ${index + 1}: ${scene.title}`"
+            :aria-label="`跳轉到場景 ${index + 1}: ${getLocalizedText(scene.title, currentLanguage)}`"
             :aria-current="currentIndex === index ? 'true' : 'false'"
           >
             <!-- 連結線 (裝飾) - 僅在非溢出模式下顯示 -->
@@ -75,7 +75,7 @@
             <!-- Tooltip on hover -->
             <div class="absolute bottom-full mb-4 opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none whitespace-nowrap">
               <span class="bg-black/90 text-gold text-xs px-3 py-1.5 rounded-sm border border-gold/20 backdrop-blur-md font-serif tracking-widest min-w-max shadow-xl">
-                {{ scene.title }}
+                {{ getLocalizedText(scene.title, currentLanguage) }}
               </span>
             </div>
           </button>
@@ -88,16 +88,19 @@
 <script setup lang="ts">
 import { ref, computed, watch, nextTick, onMounted } from 'vue'
 import type { Scene } from '@/types'
+import { getLocalizedText } from '@/utils/i18n'
 
 // Props
 interface Props {
   scenes: Scene[]
   currentIndex: number
   showThumbnails?: boolean
+  currentLanguage?: string
 }
 
 const props = withDefaults(defineProps<Props>(), {
-  showThumbnails: false
+  showThumbnails: false,
+  currentLanguage: 'zh'
 })
 
 // Emits
@@ -354,23 +357,6 @@ defineExpose({
 .scroll-button:hover {
   transform: scale(1.1);
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-}
-
-/* 響應式調整 */
-@media (max-width: 640px) {
-  .navigation-item {
-    min-width: 50px;
-    height: 40px;
-  }
-  
-  .navigation-container .h-16 {
-    height: 3.5rem;
-  }
-  
-  /* 在小螢幕上隱藏滾動按鈕，依賴觸控滾動 */
-  .scroll-button {
-    display: none;
-  }
 }
 
 /* 平滑滾動增強 */

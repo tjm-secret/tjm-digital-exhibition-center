@@ -2,7 +2,7 @@
 
 export interface Scene {
   id: string
-  title: string
+  title: string | Record<string, string> // 多語言標題
   description: Record<string, string> // 多語言描述
   image: {
     url: string

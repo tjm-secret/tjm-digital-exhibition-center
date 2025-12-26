@@ -1,16 +1,12 @@
 <template>
   <div 
-    :class="[
-      'responsive-layout w-full h-full',
-      'transition-all duration-300 ease-in-out',
-      layoutClasses
-    ]"
+    class="responsive-layout w-full h-full transition-all duration-300 ease-in-out"
     :style="layoutStyles"
   >
     <!-- Desktop Layout: Full Screen Image with Overlay Content -->
+    <!-- Visible on lg screens (>= 1024px) -->
     <div 
-      v-if="isDesktop"
-      class="desktop-layout relative w-full h-full overflow-hidden bg-black"
+      class="desktop-layout relative w-full h-full overflow-hidden bg-black hidden lg:block"
     >
       <!-- Background Image Layer (Full Width/Height) -->
       <div class="image-section absolute inset-0 z-0 transition-transform duration-700 ease-in-out">
@@ -30,9 +26,9 @@
     </div>
 
     <!-- Tablet Layout: Top-Bottom Stack with adjusted proportions -->
+    <!-- Visible on md screens but hidden on lg screens (768px - 1023px) -->
     <div 
-      v-else-if="isTablet"
-      class="tablet-layout flex flex-col h-full"
+      class="tablet-layout flex flex-col h-full hidden md:block lg:hidden"
     >
       <!-- Top: Image Display (60% height in portrait, 50% in landscape) -->
       <div 
@@ -45,20 +41,21 @@
       </div>
       
       <!-- Bottom: Content Panel (40% height in portrait, 50% in landscape) -->
-      <div 
+      <ExhibitionContentPanel 
         :class="[
-          'content-section bg-zinc-950 border-t border-gold/30',
+          'content-section',
           isLandscape ? 'h-1/2' : 'h-2/5'
         ]"
+        layout-mode="tablet"
       >
         <slot name="content" :layout-mode="'tablet'" />
-      </div>
+      </ExhibitionContentPanel>
     </div>
 
     <!-- Mobile Layout: Top-Bottom Stack optimized for small screens -->
+    <!-- Visible on small screens, hidden on md screens (< 768px) -->
     <div 
-      v-else
-      class="mobile-layout flex flex-col h-full"
+      class="mobile-layout flex flex-col h-full block md:hidden"
     >
       <!-- Top: Image Display (50% height in portrait, 60% in landscape) -->
       <div 
@@ -71,20 +68,22 @@
       </div>
       
       <!-- Bottom: Content Panel (50% height in portrait, 40% in landscape) -->
-      <div 
+      <ExhibitionContentPanel 
         :class="[
-          'content-section bg-zinc-950 border-t border-gold/30',
+          'content-section',
           isLandscape ? 'h-2/5' : 'h-1/2'
         ]"
+        layout-mode="mobile"
       >
         <slot name="content" :layout-mode="'mobile'" />
-      </div>
+      </ExhibitionContentPanel>
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
 import { ref, computed, onMounted, onUnmounted } from 'vue'
+import ExhibitionContentPanel from './ExhibitionContentPanel.vue'
 
 // Props
 interface Props {
@@ -96,7 +95,7 @@ const props = defineProps<Props>()
 
 // Emits
 interface Emits {
-  (e: 'layout-change', layout: { mode: string; orientation: string; dimensions: { width: number; height: number } }): void
+  (e: 'layout-change', layout: { mode: 'desktop' | 'tablet' | 'mobile'; orientation: string; dimensions: { width: number; height: number } }): void
   (e: 'orientation-change', orientation: 'portrait' | 'landscape'): void
 }
 
@@ -137,24 +136,7 @@ const layoutMode = computed(() => {
   return 'mobile'
 })
 
-const layoutClasses = computed(() => {
-  const classes = []
-  
-  // Base layout classes
-  classes.push(`layout-${layoutMode.value}`)
-  classes.push(`orientation-${orientation.value}`)
-  
-  // Responsive visibility classes
-  if (isDesktop.value) {
-    classes.push('hidden', 'lg:block')
-  } else if (isTablet.value) {
-    classes.push('hidden', 'md:block', 'lg:hidden')
-  } else {
-    classes.push('block', 'md:hidden')
-  }
-  
-  return classes
-})
+
 
 const layoutStyles = computed(() => {
   return {
@@ -251,28 +233,6 @@ defineExpose({
   --aspect-ratio: 1;
 }
 
-/* Layout-specific styles */
-.layout-desktop {
-  /* Desktop-specific optimizations */
-}
-
-.layout-tablet {
-  /* Tablet-specific optimizations */
-}
-
-.layout-mobile {
-  /* Mobile-specific optimizations */
-}
-
-/* Orientation-specific styles */
-.orientation-landscape {
-  /* Landscape-specific adjustments */
-}
-
-.orientation-portrait {
-  /* Portrait-specific adjustments */
-}
-
 /* Smooth transitions for layout changes */
 .image-section,
 .content-section {
@@ -287,37 +247,5 @@ defineExpose({
 
 .image-section {
   overflow: hidden;
-}
-
-/* Responsive breakpoint utilities */
-@media (max-width: 767px) {
-  .responsive-layout {
-    /* Mobile-specific CSS */
-  }
-}
-
-@media (min-width: 768px) and (max-width: 1023px) {
-  .responsive-layout {
-    /* Tablet-specific CSS */
-  }
-}
-
-@media (min-width: 1024px) {
-  .responsive-layout {
-    /* Desktop-specific CSS */
-  }
-}
-
-/* Handle orientation changes smoothly */
-@media (orientation: landscape) {
-  .responsive-layout {
-    /* Landscape-specific adjustments */
-  }
-}
-
-@media (orientation: portrait) {
-  .responsive-layout {
-    /* Portrait-specific adjustments */
-  }
 }
 </style>

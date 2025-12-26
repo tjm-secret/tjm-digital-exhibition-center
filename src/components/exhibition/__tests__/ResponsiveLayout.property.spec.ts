@@ -235,14 +235,8 @@ describe('ResponsiveLayout Property Tests', () => {
           },
         })
         
-        // Listen for events
-        wrapper.vm.$on?.('layout-change', (event: any) => {
-          layoutChangeEvents.push(event)
-        })
-        
-        wrapper.vm.$on?.('orientation-change', (orientation: string) => {
-          orientationChangeEvents.push(orientation)
-        })
+        // Listen for events - Vue Test Utils automatically captures events in emitted()
+        // No need to manually subscribe with $on which is not available in Vue 3
         
         await nextTick()
         const component = wrapper.vm as any
@@ -356,9 +350,9 @@ describe('ResponsiveLayout Property Tests', () => {
       
       // Verify final orientation is landscape
       expect(component.orientation).toBe('landscape')
-      
-      // Verify orientation change event was emitted
-      expect(emitSpy).toHaveBeenCalledWith('orientation-change', 'landscape')
+            // Verify orientation change event was emitted
+        expect(wrapper.emitted('orientation-change')).toBeTruthy()
+        expect(wrapper.emitted('orientation-change')![0]).toEqual(['landscape'])
       
       wrapper.unmount()
     })

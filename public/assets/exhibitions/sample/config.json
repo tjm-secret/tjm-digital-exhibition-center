@@ -1,94 +1,146 @@
 {
-  "id": "sample",
-  "title": "範例展覽",
-  "description": "這是一個展示線上展覽系統功能的範例展覽",
+  "id": "scale-test-exhibition",
+  "title": {
+    "zh": "時空交錯：從遺跡到殿堂",
+    "en": "Interwoven Time: From Ruins to Sanctuary"
+  },
+  "description": {
+    "zh": "測試展覽擴充性與極端內容呈現 - Scalability & Content Stress Test",
+    "en": "Testing exhibition scalability and extreme content presentation."
+  },
+  "availableLanguages": ["zh", "en"],
   "scenes": [
     {
       "id": "scene-1",
-      "title": "第一個場景",
+      "title": {
+        "zh": "古堡新生：歷史與現代的對話",
+        "en": "Rebirth of the Castle: A Dialogue Between History and Modernity"
+      },
       "description": {
-        "zh": "歡迎來到線上展覽系統。這是第一個展示場景。",
-        "en": "Welcome to the online exhibition system. This is the first display scene.",
-        "ja": "オンライン展示システムへようこそ。これは最初の展示シーンです。"
+        "zh": "在這座始建於12世紀的古老城堡遺跡中，我們見證了一場跨越千年的建築對話。曾經是防禦工事的堅固石牆，如今被輕盈通透的現代玻璃帷幕溫柔地包覆。設計師巧妙地保留了原本因戰火與歲月而斑駁的石材肌理，每一道裂痕都訴說著中古世紀的興衰故事。而新建的鋼構玻璃走廊，像是一條時光隧道，穿梭在廢墟之間，將破碎的空間重新串聯。 \n\n陽光穿透高大的落地窗，灑落在經過修復的石板地上，形成原本不可能存在的光影幾何。這裡不再是封閉的軍事堡壘，而是連結自然與藝術的開放場域。遊客漫步其中，可以同時觸摸到粗糙冰冷的古代岩石，與光滑溫暖的現代建材。這樣的並置並非衝突，而是一種共生。 \n\n這座美術館的改建計畫歷時十年，期間考古學家與建築師緊密合作，確保每一塊倒塌的石塊都能被適當地記錄或復原。它不僅僅是一個展示藝術品的容器，其建築本身就是一件巨大的裝置藝術，展現了人類如何尊重歷史，同時勇於創新的精神。從防禦到接納，從封閉到開放，這座古堡的轉變，正是人類文明演進的最佳縮影。隨著晝夜與四季的更迭，光線在古老的石牆上演繹著不同的表情，讓每一次的造訪都有全新的感動。這不僅是對過去的致敬，更是對未來的展望，邀請每一位參訪者思考時間、空間與記憶的深層意義。",
+        "en": "In this ancient castle ruin, originally built in the 12th century, we witness an architectural dialogue spanning a millennium. Solid stone walls, once fortifications, are now gently enveloped by light, transparent modern glass curtains. The designers cleverly preserved the stone texture, mottled by war and time; every crack tells a story of the rise and fall of the Middle Ages. The newly built steel and glass corridor acts as a time tunnel, weaving through the ruins to reconnect fragmented spaces.\n\nSunlight penetrates the tall floor-to-ceiling windows, spilling onto the restored flagstone floor, creating geometries of light and shadow that previously could not exist. This is no longer a closed military fortress, but an open field connecting nature and art. Visitors wandering through can simultaneously touch the rough, cold ancient rocks and the smooth, warm modern building materials. This juxtaposition is not conflict, but symbiosis.\n\nThe museum's renovation project lasted ten years, during which archaeologists and architects worked closely to ensure every fallen stone was properly recorded or restored. It is not just a container for displaying artworks; the architecture itself is a huge installation art piece, demonstrating the human spirit of respecting history while daring to innovate. From defense to acceptance, from closed to open, the transformation of this castle is the best microcosm of the evolution of human civilization. With the changing of day and night and the seasons, light interprets different expressions on the ancient stone walls, making every visit a new moving experience. This is not only a tribute to the past but also a vision for the future, inviting every visitor to contemplate the deep meaning of time, space, and memory."
       },
       "image": {
-        "url": "scene-1.svg",
-        "alt": "第一個場景的展示圖片",
-        "width": 1920,
-        "height": 1080,
-        "thumbnail": "scene-1.svg"
+        "url": "scene-1.png",
+        "alt": "Medieval castle renovated into a modern art museum"
       },
       "audio": {
         "zh": {
           "url": "scene-1-zh.mp3",
-          "duration": 30,
-          "format": "mp3",
-          "size": 480000
+          "duration": 180,
+          "transcript": "這是一段測試音檔，模擬長篇導覽內容..."
         },
         "en": {
           "url": "scene-1-en.mp3",
-          "duration": 32,
-          "format": "mp3",
-          "size": 512000
+          "duration": 180,
+          "transcript": "This is a test audio track simulating a long audio guide..."
         }
       },
-      "order": 1,
       "metadata": {
-        "artist": "範例藝術家",
-        "year": "2024",
-        "medium": "數位藝術",
-        "dimensions": "1920x1080 像素"
+        "artist": "Carlo Scarpa (Inspired)",
+        "year": "2024 Renovation",
+        "medium": "Stone, Steel, Glass",
+        "dimensions": "Total Area: 1200m²"
       }
     },
     {
       "id": "scene-2",
-      "title": "第二個場景",
+      "title": {
+        "zh": "靜謐迴廊",
+        "en": "The Silent Corridor"
+      },
       "description": {
-        "zh": "這是第二個展示場景，展示了系統的滑動導覽功能。",
-        "en": "This is the second display scene, showcasing the system's swipe navigation feature.",
-        "ja": "これは2番目の展示シーンで、システムのスワイプナビゲーション機能を紹介しています。"
+        "zh": "極簡主義的極致展現。純粹的光線，純粹的空間。在這裡，少即是多，空無即是萬有。請靜心感受。",
+        "en": "The ultimate expression of minimalism. Pure light, pure space. Here, less is more, and emptiness is everything. Please feel it with a quiet heart."
       },
       "image": {
-        "url": "scene-2.svg",
-        "alt": "第二個場景的展示圖片",
-        "width": 1920,
-        "height": 1080,
-        "thumbnail": "scene-2.svg"
+        "url": "scene-2.png",
+        "alt": "Modern minimalist museum interior"
       },
       "audio": {
         "zh": {
           "url": "scene-2-zh.mp3",
-          "duration": 28,
-          "format": "mp3",
-          "size": 448000
+          "duration": 30,
+          "transcript": "短篇導覽測試。"
         },
         "en": {
           "url": "scene-2-en.mp3",
           "duration": 30,
-          "format": "mp3",
-          "size": 480000
+          "transcript": "Short guide test."
         }
       },
-      "order": 2,
       "metadata": {
-        "artist": "範例藝術家",
+        "artist": "Tadao Ando (Style)",
+        "year": "2023",
+        "medium": "Concrete, Light",
+        "dimensions": "Variable"
+      }
+    },
+    {
+      "id": "scene-3",
+      "title": {
+        "zh": "金之微觀",
+        "en": "Microcosm of Gold"
+      },
+      "description": {
+        "zh": "透過微距鏡頭，我們得以窺見金箔工藝的極致細節。每一寸紋理的起伏，都是工匠屏氣凝神的結晶。金色的光澤在不同角度下流動，展現出金屬獨有的生命力與溫潤感。這不僅是材質的展示，更是對工藝精神的微觀禮讚。",
+        "en": "Through the macro lens, we get a glimpse of the ultimate details of gold leaf craftsmanship. The undulations of every inch of texture are the crystallization of the craftsman's breathlessness. The golden luster flows from different angles, showing the unique vitality and warmth of the metal. This is not only a display of material but also a microscopic tribute to the spirit of craftsmanship."
+      },
+      "image": {
+        "url": "scene-3.png",
+        "alt": "Macro shot of gold leaf texture"
+      },
+      "audio": {
+        "zh": {
+          "url": "scene-3-zh.mp3",
+          "duration": 60,
+          "transcript": "中篇導覽測試 - 金色主題。"
+        },
+        "en": {
+          "url": "scene-3-en.mp3",
+          "duration": 60,
+          "transcript": "Medium guide test - Gold theme."
+        }
+      },
+      "metadata": {
+        "artist": "Master Artisan Tanaka",
+        "year": "Edo Period (Restored)",
+        "medium": "Gold Leaf (24K)",
+        "dimensions": "10cm x 10cm (Detail)"
+      }
+    },
+    {
+      "id": "scene-4",
+      "title": {
+        "zh": "夜之守護者",
+        "en": "Guardian of the Night"
+      },
+      "description": {
+        "zh": "當夜幕低垂，古堡美術館展現出截然不同的面貌。精心設計的建築照明這時才悄悄登場，它們不只是為了照明，更是為了雕塑。光束勾勒出古城牆的剛毅輪廓，同時溫柔地暈染出現代玻璃結構的通透感。在深藍色的夜空下，新舊建築彷彿融為一體，如同一座發光的燈塔，守護著藝術與歷史的火種。這是一個關於守護與傳承的靜謐時刻。",
+        "en": "When night falls, the castle museum reveals a completely different face. Carefully designed architectural lighting quietly takes the stage, not just for illumination, but for sculpting. Beams of light outline the resolute contours of the ancient city walls while gently dying the transparency of the modern glass structure. Under the deep blue night sky, the new and old buildings seem to merge into one, like a glowing lighthouse guarding the spark of art and history. This is a quiet moment about guardianship and inheritance."
+      },
+      "image": {
+        "url": "scene-4.png",
+        "alt": "The castle museum at night"
+      },
+      "audio": {
+        "zh": {
+          "url": "scene-4-zh.mp3",
+          "duration": 90,
+          "transcript": "中篇導覽測試 - 夜景模式。"
+        },
+        "en": {
+          "url": "scene-4-en.mp3",
+          "duration": 90,
+          "transcript": "Medium guide test - Night view mode."
+        }
+      },
+      "metadata": {
+        "artist": "Light Design Co.",
         "year": "2024",
-        "medium": "數位藝術",
-        "dimensions": "1920x1080 像素"
+        "medium": "Architecture, LED",
+        "dimensions": "Site-specific"
       }
     }
-  ],
-  "defaultLanguage": "zh",
-  "availableLanguages": ["zh", "en", "ja"],
-  "resourceConfig": {
-    "mode": "static",
-    "staticPath": "/assets/exhibitions/",
-    "fallbackStrategy": "none"
-  },
-  "settings": {
-    "autoplay": false,
-    "showThumbnails": true,
-    "enableKeyboard": true,
-    "preloadCount": 2
-  }
+  ]
 }

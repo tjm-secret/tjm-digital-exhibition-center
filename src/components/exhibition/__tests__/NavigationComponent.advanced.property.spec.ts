@@ -147,7 +147,7 @@ describe('NavigationComponent Advanced Property Tests', () => {
             
             // 檢查是否發出了 navigation-scroll 事件
             const emittedEvents = wrapper.emitted('navigation-scroll')
-            if (emittedEvents) {
+            if (emittedEvents && emittedEvents[0]) {
               expect(emittedEvents.length).toBeGreaterThan(0)
               // 檢查事件參數是否為有效的方向
               const direction = emittedEvents[0][0]
@@ -256,9 +256,11 @@ describe('NavigationComponent Advanced Property Tests', () => {
       const navigationItems = wrapper.findAll('.navigation-item')
       
       // 快速連續點擊多個項目
-      await navigationItems[2].trigger('click')
-      await navigationItems[5].trigger('click')
-      await navigationItems[8].trigger('click')
+      if (navigationItems.length > 8) {
+        await navigationItems[2]!.trigger('click')
+        await navigationItems[5]!.trigger('click')
+        await navigationItems[8]!.trigger('click')
+      }
       
       // 檢查事件是否都被正確發出（檢查跳轉動畫開始事件）
       const jumpStartEvents = wrapper.emitted('jump-animation-start')

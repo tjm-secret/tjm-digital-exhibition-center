@@ -214,8 +214,11 @@ describe('useAudioGuide Property Tests', () => {
             
             // 驗證音訊檔案存在
             const hasAudio = scene.audio[language]
-            expect(typeof hasAudio.url).toBe('string')
-            expect(hasAudio.url.length).toBeGreaterThan(0)
+            expect(hasAudio).toBeDefined()
+            if (hasAudio) {
+              expect(typeof hasAudio.url).toBe('string')
+              expect(hasAudio.url.length).toBeGreaterThan(0)
+            }
           }
         }
       ), { numRuns: 50 })

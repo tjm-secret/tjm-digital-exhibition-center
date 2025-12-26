@@ -270,6 +270,15 @@ export class SwiperController {
   }
 
   /**
+   * 更新 Swiper 實例
+   */
+  update(): void {
+    if (this.swiperInstance) {
+      this.swiperInstance.update()
+    }
+  }
+
+  /**
    * 啟用/禁用觸控滑動
    */
   setTouchEnabled(enabled: boolean): void {

@@ -107,25 +107,25 @@
 
     <!-- 文字內容顯示 (Gold Leaf Style) -->
     <div :class="[
-      'text-content glass-panel rounded-xl',
+      'text-content glass-panel rounded-xl flex-1 min-h-0 flex flex-col',
       'border-l-2 border-l-gold',
-      layoutMode === 'mobile' ? 'p-4' : 'p-6'
+      layoutMode === 'mobile' ? 'p-4 mb-20' : 'p-6'
     ]">
       <h3 :class="[
-        'font-serif text-gold tracking-wider mb-4',
+        'font-serif text-gold tracking-wider mb-4 flex-shrink-0',
         layoutMode === 'mobile' ? 'text-lg' : 'text-2xl'
       ]">
-        {{ scene?.title || '場景標題' }}
+        {{ getLocalizedText(scene?.title, currentLanguage) || '場景標題' }}
       </h3>
       <div :class="[
-        'text-content-body pr-2',
-        layoutMode === 'mobile' ? 'max-h-48' : 'max-h-[40vh]'
+        'text-content-body pr-2 overflow-y-auto',
+        layoutMode === 'mobile' ? 'flex-1' : 'max-h-[40vh]'
       ]">
         <p :class="[
           'text-gray-300 leading-relaxed font-light tracking-wide whitespace-pre-line',
-          layoutMode === 'mobile' ? 'text-sm' : 'text-base'
+          layoutMode === 'mobile' ? 'text-sm pb-8' : 'text-base'
         ]">
-          {{ currentDescription }}
+          {{ getLocalizedText(scene?.description, currentLanguage) }}
         </p>
       </div>
     </div>
@@ -149,6 +149,7 @@
 import { ref, computed, watch, onMounted, onUnmounted } from 'vue'
 import { audioManager } from '@/services/AudioManager'
 import type { Scene } from '@/types'
+import { getLocalizedText } from '@/utils/i18n'
 
 
 interface Props {
@@ -208,7 +209,10 @@ const togglePlayPause = async () => {
     if (isPlaying.value) {
       audioManager.pauseAudio()
     } else {
-      const audioFile = props.scene!.audio[currentLanguage.value]
+      const audioFile = props.scene?.audio?.[currentLanguage.value]
+      if (!audioFile) {
+        throw new Error('Audio file not found for current language')
+      }
       await audioManager.playAudio(audioFile.url, currentLanguage.value)
       
       // 如果有保存的進度，跳轉到該位置
@@ -233,7 +237,10 @@ const replayAudio = async () => {
   
   try {
     audioManager.stopAudio()
-    const audioFile = props.scene!.audio[currentLanguage.value]
+    const audioFile = props.scene?.audio?.[currentLanguage.value]
+    if (!audioFile) {
+       throw new Error('Audio file not found')
+    }
     await audioManager.playAudio(audioFile.url, currentLanguage.value)
   } catch (error) {
     console.error('重播音訊失敗:', error)
@@ -272,7 +279,9 @@ const handleLanguageChange = async (newLanguage: string) => {
   try {
     isLoading.value = true
     const audioFile = props.scene.audio[newLanguage]
-    await audioManager.loadAudio(audioFile.url, newLanguage)
+    if (audioFile) {
+      await audioManager.loadAudio(audioFile.url, newLanguage)
+    }
   } catch (error) {
     console.error('載入新語言音訊失敗:', error)
     errorMessage.value = '載入音訊失敗，請檢查網路連線'
@@ -288,8 +297,10 @@ const retryLoad = async () => {
   isLoading.value = true
   
   try {
-    const audioFile = props.scene!.audio[currentLanguage.value]
-    await audioManager.loadAudio(audioFile.url, currentLanguage.value)
+    const audioFile = props.scene?.audio?.[currentLanguage.value]
+    if (audioFile) {
+      await audioManager.loadAudio(audioFile.url, currentLanguage.value)
+    }
   } catch (error) {
     console.error('重試載入失敗:', error)
     errorMessage.value = '載入失敗，請檢查網路連線'
@@ -343,15 +354,20 @@ watch(() => props.scene, async (newScene) => {
     const preferredLang = availableLangs.includes(props.defaultLanguage) 
       ? props.defaultLanguage 
       : availableLangs[0]
-    currentLanguage.value = preferredLang
+    
+    if (preferredLang) {
+      currentLanguage.value = preferredLang
+    }
   }
 
   // 預載當前語言的音訊
   if (hasAudio.value) {
     try {
       isLoading.value = true
-      const audioFile = newScene.audio[currentLanguage.value]
-      await audioManager.loadAudio(audioFile.url, currentLanguage.value)
+      const audioFile = newScene.audio?.[currentLanguage.value]
+      if (audioFile) {
+        await audioManager.loadAudio(audioFile.url, currentLanguage.value)
+      }
     } catch (error) {
       console.error('預載音訊失敗:', error)
       errorMessage.value = '載入音訊失敗'

@@ -4,11 +4,11 @@ import { SwiperController } from '../SwiperController'
 
 // Mock Swiper module with proper structure
 const mockSwiperInstance = {
-  slides: [],
+  slides: [] as HTMLElement[],
   activeIndex: 0,
   isBeginning: true,
   isEnd: false,
-  params: {},
+  params: {} as any,
   slideNext: vi.fn(),
   slidePrev: vi.fn(),
   slideTo: vi.fn(),

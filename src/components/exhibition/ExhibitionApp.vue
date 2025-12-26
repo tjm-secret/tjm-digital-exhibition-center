@@ -30,7 +30,8 @@
               <SceneComponent
                 :scene="scene"
                 :is-active="index === currentSceneIndex"
-                :layout-mode="layoutMode"
+                :layout-mode="layoutMode as 'desktop' | 'tablet' | 'mobile'"
+                :current-language="currentLanguage"
                 @content-loaded="handleContentLoaded"
                 @image-loaded="handleImageLoaded"
                 @image-error="handleImageError"
@@ -46,7 +47,7 @@
                 <AudioGuideComponent
                   :scene="scene"
                   :default-language="currentLanguage"
-                  :layout-mode="layoutMode"
+                  :layout-mode="layoutMode as 'desktop' | 'tablet' | 'mobile'"
                 />
               </div>
             </template>
@@ -61,6 +62,7 @@
         :scenes="scenes"
         :current-index="currentSceneIndex"
         :show-thumbnails="false"
+        :current-language="currentLanguage"
         @scene-selected="navigateToScene"
         @navigation-scroll="handleNavigationScroll"
       />
@@ -93,6 +95,7 @@ import LanguageSwitcher from './LanguageSwitcher.vue'
 import { globalImageLoader } from '@/services/ImageLoader'
 import { globalSwiperController } from '@/services/SwiperController'
 import { ResourceManager } from '@/services/ResourceManager'
+import { audioManager } from '@/services/AudioManager'
 
 // 基本狀態管理
 const scenes = ref<Scene[]>([])
@@ -104,7 +107,7 @@ const exhibitionConfig = ref<ExhibitionConfig | null>(null)
 const isLoading = ref(true)
 const loadError = ref<string>('')
 const currentLanguage = ref('zh')
-const currentLayoutMode = ref('desktop')
+const currentLayoutMode = ref<'desktop' | 'tablet' | 'mobile'>('desktop')
 
 // ResourceManager 實例
 const resourceConfig: ResourceConfig = {
@@ -319,6 +322,8 @@ const initializeSwiper = () => {
   // 設置事件監聽器
   globalSwiperController.onSlideChange((index: number) => {
     console.log(`Swiper slide changed to: ${index}`)
+    // 切換場景時停止所有音訊播放
+    audioManager.stopAudio()
     currentSceneIndex.value = index
   })
   
@@ -410,14 +415,12 @@ const handleNavigationScroll = (direction: 'left' | 'right') => {
 }
 
 // 響應式佈局事件處理器
-const handleLayoutChange = (layout: { mode: string; orientation: string; dimensions: { width: number; height: number } }) => {
+const handleLayoutChange = (layout: { mode: 'desktop' | 'tablet' | 'mobile'; orientation: string; dimensions: { width: number; height: number } }) => {
   console.log('Layout changed:', layout)
   currentLayoutMode.value = layout.mode
   
   // 當佈局改變時，可能需要重新初始化 Swiper
-  if (globalSwiperController.swiperInstance) {
-    globalSwiperController.swiperInstance.update()
-  }
+  globalSwiperController.update()
   
   // 觸發相鄰場景預載，因為佈局改變可能影響載入策略
   preloadAdjacentScenes()
@@ -428,9 +431,7 @@ const handleOrientationChange = (orientation: 'portrait' | 'landscape') => {
   
   // 方向改變時更新 Swiper
   setTimeout(() => {
-    if (globalSwiperController.swiperInstance) {
-      globalSwiperController.swiperInstance.update()
-    }
+    globalSwiperController.update()
   }, 300) // 等待 CSS 轉換完成
 }
 

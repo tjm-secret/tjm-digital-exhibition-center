@@ -33,6 +33,7 @@
           draggable="false"
           :class="[
             'scene-image w-full h-full object-contain transition-all duration-1000 ease-out select-none',
+            'md:object-contain object-cover', // Mobile: cover, Tablet/Desktop: contain
             imageLoaded ? 'opacity-100 scale-100' : 'opacity-0 scale-105'
           ]"
           @load="handleImageLoad"
@@ -78,8 +79,8 @@
             layoutMode === 'mobile' ? 'text-sm p-2' : ''
           ]"
         >
-          <h3 :class="['font-semibold mb-1', layoutMode === 'mobile' ? 'text-base' : 'text-lg']">
-            {{ scene.title }}
+  <h3 :class="['font-semibold mb-1', layoutMode === 'mobile' ? 'text-base' : 'text-lg']">
+            {{ getLocalizedText(scene.title, currentLanguage) }}
           </h3>
           <div v-if="scene.metadata.artist" :class="['opacity-90', layoutMode === 'mobile' ? 'text-xs' : 'text-sm']">
             藝術家: {{ scene.metadata.artist }}
@@ -100,6 +101,7 @@
 import { ref, watch, onMounted, onUnmounted } from 'vue'
 import type { Scene } from '@/types'
 import { globalImageLoader } from '@/services/ImageLoader'
+import { getLocalizedText } from '@/utils/i18n'
 
 // Props
 interface Props {
@@ -108,13 +110,15 @@ interface Props {
   isPreloaded?: boolean
   showMetadata?: boolean
   layoutMode?: 'desktop' | 'tablet' | 'mobile'
+  currentLanguage?: string
 }
 
 const props = withDefaults(defineProps<Props>(), {
   isActive: false,
   isPreloaded: false,
   showMetadata: true,
-  layoutMode: 'desktop'
+  layoutMode: 'desktop',
+  currentLanguage: 'zh'
 })
 
 // Emits
@@ -270,14 +274,5 @@ defineExpose({
   max-height: 100%;
   width: auto;
   height: auto;
-}
-
-/* Responsive adjustments */
-@media (max-width: 768px) {
-  .scene-image {
-    object-fit: cover;
-    width: 100%;
-    height: 100%;
-  }
 }
 </style>
