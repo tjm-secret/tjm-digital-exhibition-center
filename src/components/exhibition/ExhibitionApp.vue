@@ -112,7 +112,7 @@ const currentLayoutMode = ref<'desktop' | 'tablet' | 'mobile'>('desktop')
 // ResourceManager 實例
 const resourceConfig: ResourceConfig = {
   mode: 'static',
-  staticPath: '/assets/exhibitions/',
+  staticPath: 'assets/exhibitions/',
   fallbackStrategy: 'none'
 }
 const resourceManager = new ResourceManager(resourceConfig)

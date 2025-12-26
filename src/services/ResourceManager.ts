@@ -43,7 +43,7 @@ export class ResourceManager {
    * @returns Promise resolving to ExhibitionConfig
    */
   private async loadFromStatic(exhibitionId: string): Promise<ExhibitionConfig> {
-    const staticPath = this.config.staticPath || '/assets/exhibitions/'
+    const staticPath = this.config.staticPath || 'assets/exhibitions/'
     const configPath = `${staticPath}${exhibitionId}/config.json`
     
     const response = await fetch(configPath)
@@ -97,7 +97,7 @@ export class ResourceManager {
    * @returns Updated configuration with resolved URLs
    */
   private resolveStaticUrls(config: ExhibitionConfig, exhibitionId: string): ExhibitionConfig {
-    const staticPath = this.config.staticPath || '/assets/exhibitions/'
+    const staticPath = this.config.staticPath || 'assets/exhibitions/'
     const basePath = `${staticPath}${exhibitionId}/`
     
     config.scenes.forEach((scene: Scene) => {
