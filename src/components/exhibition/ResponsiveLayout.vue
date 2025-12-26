@@ -70,11 +70,10 @@
       <!-- Bottom: Content Panel (50% height in portrait, 40% in landscape) -->
       <ExhibitionContentPanel 
         :class="[
-          'content-section p-6 swiper-no-swiping',
+          'content-section p-6',
           isLandscape ? 'h-2/5' : 'h-1/2'
         ]"
         layout-mode="mobile"
-        @touchstart.stop
       >
         <slot name="content" :layout-mode="'mobile'" />
       </ExhibitionContentPanel>

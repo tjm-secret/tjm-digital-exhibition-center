@@ -57,7 +57,7 @@
     </div>
     
     <!-- 底部導覽列 -->
-    <div class="transition-opacity duration-700 ease-in-out" :class="{ 'opacity-0 pointer-events-none': isUserIdle && currentLayoutMode === 'desktop' }">
+    <div class="transition-opacity duration-700 ease-in-out" :class="{ 'opacity-0 pointer-events-none': isUserIdle && currentLayoutMode !== 'desktop' }">
       <NavigationComponent
         :scenes="scenes"
         :current-index="currentSceneIndex"
@@ -145,7 +145,7 @@ const resetIdleTimer = () => {
   if (idleTimer) window.clearTimeout(idleTimer)
   idleTimer = window.setTimeout(() => {
     isUserIdle.value = true
-  }, 3000) // 3 seconds idle
+  }, 5000) // 5 seconds idle
 }
 
 const updateGlobalLayoutMode = () => {
