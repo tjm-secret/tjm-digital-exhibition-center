@@ -29,29 +29,22 @@
           leave-from-class="transform scale-100 opacity-100"
           leave-to-class="transform scale-95 opacity-0"
         >
-          <div 
+          <div
             v-if="isOpen"
-            class="absolute top-full left-0 mt-2 w-32 py-1 bg-dark-surface border border-gold/20 rounded-lg shadow-xl backdrop-blur-md overflow-hidden"
+            class="absolute right-0 top-full mt-2 w-32 overflow-hidden z-50 rounded-lg backdrop-blur-md bg-black/90 border border-white/10 shadow-xl"
           >
             <button
-              v-for="language in availableLanguages"
-              :key="language"
-              @click="selectLanguage(language)"
-              class="w-full text-left px-4 py-2 text-sm text-zinc-400 hover:text-gold hover:bg-white/5 transition-colors font-serif"
-              :class="{ 'text-gold bg-white/5': selectedLanguage === language }"
+              v-for="code in availableLanguages"
+              :key="code"
+              @click="selectLanguage(code)"
+              class="w-full px-4 py-2 text-left text-sm font-serif transition-colors hover:bg-gold/10"
+              :class="selectedLanguage === code ? 'text-gold' : 'text-gray-400 hover:text-gold/80'"
             >
-              {{ getLanguageDisplayName(language) }}
+              {{ getLanguageDisplayName(code) }}
             </button>
           </div>
         </transition>
       </div>
-
-      <!-- Overlay to close dropdown when clicking outside -->
-      <div 
-        v-if="isOpen" 
-        @click="isOpen = false"
-        class="fixed inset-0 z-[-1]"
-      ></div>
     </div>
   </div>
 </template>
@@ -59,28 +52,31 @@
 <script setup lang="ts">
 import { ref, watch, onMounted } from 'vue'
 
-interface Props {
-  availableLanguages: string[]
-  defaultLanguage?: string
-  modelValue?: string
-}
 
-interface Emits {
-  (e: 'update:modelValue', value: string): void
-  (e: 'languageChanged', language: string): void
+
+
+// Props
+interface Props {
+  modelValue?: string
+  availableLanguages?: string[]
 }
 
 const props = withDefaults(defineProps<Props>(), {
-  defaultLanguage: 'zh',
-  modelValue: ''
+  modelValue: 'zh',
+  availableLanguages: () => ['zh', 'en', 'ja', 'ko']
 })
+
+// Emits
+interface Emits {
+  (e: 'update:modelValue', lang: string): void
+  (e: 'languageChanged', lang: string): void
+}
 
 const emit = defineEmits<Emits>()
 
-const selectedLanguage = ref<string>(props.modelValue || props.defaultLanguage)
 const isOpen = ref(false)
+const selectedLanguage = ref(props.modelValue)
 
-// 語言顯示名稱映射
 const languageNames: Record<string, string> = {
   zh: '繁體中文',
   en: 'English',

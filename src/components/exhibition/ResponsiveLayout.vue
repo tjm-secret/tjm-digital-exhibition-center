@@ -13,16 +13,16 @@
         <slot name="image" :layout-mode="'desktop'" />
       </div>
       
-      <!-- Content Overlay Panel (Right Side, Semi-transparent) -->
-      <div class="content-section absolute top-0 right-0 h-full w-[35%] max-w-[500px] z-10 transition-transform duration-500 ease-out translate-x-0">
-        <!-- Gradient Shade behind text -->
-        <div class="absolute inset-0 bg-linear-to-l from-black/90 via-black/70 to-transparent pointer-events-none"></div>
-        
-        <!-- Interactive Content Container -->
-        <div class="relative h-full overflow-y-auto px-8 py-12 flex flex-col justify-center">
+        <!-- Content Overlay Panel (Right Side, No Border) -->
+        <div class="content-section absolute top-0 right-0 h-full w-[40%] max-w-[600px] z-10 flex flex-col pointer-events-none">
+          <!-- Scrollable Content Area -->
+          <div 
+            class="w-full h-full pointer-events-auto overflow-y-auto px-6 py-6 md:px-8 md:py-8 overscroll-contain custom-scrollbar min-h-0"
+            ref="scrollContainer"
+          >
             <slot name="content" :layout-mode="'desktop'" />
+          </div>
         </div>
-      </div>
     </div>
 
     <!-- Tablet Layout: Top-Bottom Stack with adjusted proportions -->
@@ -43,7 +43,7 @@
       <!-- Bottom: Content Panel (40% height in portrait, 50% in landscape) -->
       <ExhibitionContentPanel 
         :class="[
-          'content-section',
+          'content-section p-6 md:p-8',
           isLandscape ? 'h-1/2' : 'h-2/5'
         ]"
         layout-mode="tablet"
@@ -70,10 +70,11 @@
       <!-- Bottom: Content Panel (50% height in portrait, 40% in landscape) -->
       <ExhibitionContentPanel 
         :class="[
-          'content-section',
+          'content-section p-6 swiper-no-swiping',
           isLandscape ? 'h-2/5' : 'h-1/2'
         ]"
         layout-mode="mobile"
+        @touchstart.stop
       >
         <slot name="content" :layout-mode="'mobile'" />
       </ExhibitionContentPanel>
@@ -84,6 +85,7 @@
 <script setup lang="ts">
 import { ref, computed, onMounted, onUnmounted } from 'vue'
 import ExhibitionContentPanel from './ExhibitionContentPanel.vue'
+
 
 // Props
 interface Props {
@@ -101,42 +103,40 @@ interface Emits {
 
 const emit = defineEmits<Emits>()
 
-// Reactive state
-const screenWidth = ref(window.innerWidth)
-const screenHeight = ref(window.innerHeight)
-const orientation = ref<'portrait' | 'landscape'>('portrait')
+// Use composable
+import { useResponsiveLayout } from '@/composables/useResponsiveLayout'
+const { 
+  screenWidth, 
+  screenHeight, 
+  orientation, 
+  isDesktop: rawIsDesktop, 
+  isTablet: rawIsTablet, 
+  isMobile: rawIsMobile, 
+  isLandscape, 
+  isPortrait, 
+  layoutMode: rawLayoutMode 
+} = useResponsiveLayout()
 
-// Computed properties
+// Override computed properties to support forceLayout prop
 const isDesktop = computed(() => {
   if (props.forceLayout) return props.forceLayout === 'desktop'
-  return screenWidth.value >= 1024 // lg breakpoint
+  return rawIsDesktop.value
 })
 
 const isTablet = computed(() => {
   if (props.forceLayout) return props.forceLayout === 'tablet'
-  return screenWidth.value >= 768 && screenWidth.value < 1024 // md to lg
+  return rawIsTablet.value
 })
 
 const isMobile = computed(() => {
   if (props.forceLayout) return props.forceLayout === 'mobile'
-  return screenWidth.value < 768 // below md
-})
-
-const isLandscape = computed(() => {
-  return orientation.value === 'landscape'
-})
-
-const isPortrait = computed(() => {
-  return orientation.value === 'portrait'
+  return rawIsMobile.value
 })
 
 const layoutMode = computed(() => {
-  if (isDesktop.value) return 'desktop'
-  if (isTablet.value) return 'tablet'
-  return 'mobile'
+  if (props.forceLayout) return props.forceLayout
+  return rawLayoutMode.value
 })
-
-
 
 const layoutStyles = computed(() => {
   return {
@@ -146,69 +146,25 @@ const layoutStyles = computed(() => {
   }
 })
 
-// Methods
-const updateScreenDimensions = () => {
-  const newWidth = window.innerWidth
-  const newHeight = window.innerHeight
-  const oldMode = layoutMode.value
-  const oldOrientation = orientation.value
-  
-  screenWidth.value = newWidth
-  screenHeight.value = newHeight
-  
-  // Update orientation based on aspect ratio
-  const newOrientation = newWidth > newHeight ? 'landscape' : 'portrait'
-  orientation.value = newOrientation
-  
-  // Emit events if layout or orientation changed
-  const newMode = layoutMode.value
-  if (oldMode !== newMode || oldOrientation !== newOrientation) {
+// Watch for changes to emit events
+import { watch } from 'vue'
+
+watch([layoutMode, orientation], ([newMode, newOrientation], [oldMode, oldOrientation]) => {
+  if (newMode !== oldMode || newOrientation !== oldOrientation) {
     emit('layout-change', {
-      mode: newMode,
+      mode: newMode as 'desktop' | 'tablet' | 'mobile',
       orientation: newOrientation,
-      dimensions: { width: newWidth, height: newHeight }
+      dimensions: { width: screenWidth.value, height: screenHeight.value }
     })
   }
-  
-  if (oldOrientation !== newOrientation) {
+
+  if (newOrientation !== oldOrientation) {
     emit('orientation-change', newOrientation)
   }
-}
-
-const handleResize = () => {
-  updateScreenDimensions()
-}
-
-const handleOrientationChange = () => {
-  // Use setTimeout to ensure dimensions are updated after orientation change
-  setTimeout(() => {
-    updateScreenDimensions()
-  }, 100)
-}
-
-// Lifecycle
-onMounted(() => {
-  updateScreenDimensions()
-  
-  // Add event listeners
-  window.addEventListener('resize', handleResize)
-  window.addEventListener('orientationchange', handleOrientationChange)
-  
-  // Also listen for screen orientation API if available
-  if (screen.orientation) {
-    screen.orientation.addEventListener('change', handleOrientationChange)
-  }
 })
 
-onUnmounted(() => {
-  // Remove event listeners
-  window.removeEventListener('resize', handleResize)
-  window.removeEventListener('orientationchange', handleOrientationChange)
-  
-  if (screen.orientation) {
-    screen.orientation.removeEventListener('change', handleOrientationChange)
-  }
-})
+const scrollContainer = ref<HTMLElement | null>(null)
+
 
 // Expose reactive properties and methods
 defineExpose({
@@ -221,7 +177,7 @@ defineExpose({
   isMobile,
   isLandscape,
   isPortrait,
-  updateScreenDimensions
+  updateScreenDimensions: () => {}
 })
 </script>
 
@@ -239,10 +195,13 @@ defineExpose({
   transition: all 0.3s ease-in-out;
 }
 
-/* Ensure proper overflow handling */
+/* Ensure proper overflow handling and touch scrolling */
 .content-section {
   overflow-y: auto;
   overflow-x: hidden;
+  -webkit-overflow-scrolling: touch; /* Enable smooth scrolling on iOS */
+  touch-action: pan-y; /* Allow vertical scrolling */
+  overscroll-behavior-y: contain; /* Prevent scroll chaining */
 }
 
 .image-section {

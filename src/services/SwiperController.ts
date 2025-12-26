@@ -68,6 +68,9 @@ export class SwiperController {
       // 觸控優化配置
       touchRatio: 1,
       touchAngle: 45,
+      // 啟用禁止滑動類名支持
+      noSwiping: true,
+      noSwipingSelector: '.swiper-no-swiping',
       longSwipes: true,
       longSwipesRatio: 0.5,
       longSwipesMs: 300,

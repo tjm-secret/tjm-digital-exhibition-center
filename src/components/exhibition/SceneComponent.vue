@@ -70,28 +70,13 @@
         </div>
 
         <!-- Scene Metadata Overlay (optional) -->
-        <div 
-          v-if="scene.metadata && showMetadata"
-          :class="[
-            'absolute bg-black bg-opacity-70 text-white p-3 rounded-lg max-w-sm',
-            // 根據佈局模式調整位置
-            layoutMode === 'desktop' ? 'bottom-4 left-4' : 'bottom-2 left-2',
-            layoutMode === 'mobile' ? 'text-sm p-2' : ''
-          ]"
-        >
-  <h3 :class="['font-semibold mb-1', layoutMode === 'mobile' ? 'text-base' : 'text-lg']">
-            {{ getLocalizedText(scene.title, currentLanguage) }}
-          </h3>
-          <div v-if="scene.metadata.artist" :class="['opacity-90', layoutMode === 'mobile' ? 'text-xs' : 'text-sm']">
-            藝術家: {{ scene.metadata.artist }}
-          </div>
-          <div v-if="scene.metadata.year" :class="['opacity-90', layoutMode === 'mobile' ? 'text-xs' : 'text-sm']">
-            年份: {{ scene.metadata.year }}
-          </div>
-          <div v-if="scene.metadata.medium" :class="['opacity-90', layoutMode === 'mobile' ? 'text-xs' : 'text-sm']">
-            媒材: {{ scene.metadata.medium }}
-          </div>
-        </div>
+        <!-- Scene Metadata Overlay -->
+        <SceneMetadataOverlay
+          :visible="!!(scene.metadata && showMetadata)"
+          :title="getLocalizedText(scene.title, currentLanguage)"
+          :metadata="scene.metadata"
+          :layout-mode="layoutMode"
+        />
       </div>
     </div>
   </div>
@@ -102,6 +87,7 @@ import { ref, watch, onMounted, onUnmounted } from 'vue'
 import type { Scene } from '@/types'
 import { globalImageLoader } from '@/services/ImageLoader'
 import { getLocalizedText } from '@/utils/i18n'
+import SceneMetadataOverlay from '@/components/exhibition/SceneMetadataOverlay.vue'
 
 // Props
 interface Props {

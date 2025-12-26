@@ -41,7 +41,7 @@
             <!-- 內容面板區域 -->
             <template #content="{ layoutMode }">
               <div 
-                class="p-4 h-full overflow-y-auto swiper-no-swiping transition-opacity duration-700 ease-in-out"
+                class="transition-opacity duration-700 ease-in-out"
                 :class="{ 'opacity-0 pointer-events-none': isUserIdle && layoutMode === 'desktop' }"
               >
                 <AudioGuideComponent

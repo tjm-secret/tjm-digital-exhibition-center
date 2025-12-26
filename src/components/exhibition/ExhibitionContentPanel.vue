@@ -1,6 +1,6 @@
 <template>
   <div 
-    class="exhibition-content-panel h-full overflow-hidden"
+    class="exhibition-content-panel h-full"
     :class="[
       // Base styles
       'bg-zinc-950 border-t border-gold/30',
