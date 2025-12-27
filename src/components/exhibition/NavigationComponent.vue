@@ -1,12 +1,12 @@
 <template>
   <div class="navigation-container pb-6 pt-12 bg-linear-to-t from-black/90 to-transparent pointer-events-none transition-opacity duration-700">
-    <div class="pointer-events-auto relative max-w-4xl mx-auto px-4">
+    <div class="pointer-events-none relative max-w-4xl mx-auto px-4">
 
 
       <!-- Mac Dock Style Navigation -->
          <div 
            ref="dockWrapper"
-           class="flex items-end justify-center pb-6 min-h-[100px]"
+           class="flex items-end justify-center pb-6 min-h-[100px] pointer-events-none lg:pointer-events-auto"
            @mousemove="handleMouseMove"
            @mouseleave="handleMouseLeave"
          >
