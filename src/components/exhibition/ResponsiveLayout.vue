@@ -17,7 +17,7 @@
         <div class="content-section absolute top-0 right-0 h-full w-[40%] max-w-[600px] z-10 flex flex-col pointer-events-none">
           <!-- Scrollable Content Area -->
           <div 
-            class="w-full h-full pointer-events-auto overflow-y-auto px-6 py-6 md:px-8 md:py-8 overscroll-contain custom-scrollbar min-h-0 select-none"
+            class="w-full h-full pointer-events-auto overflow-y-auto px-6 pt-6 pb-32 md:px-8 md:pt-8 md:pb-36 overscroll-contain custom-scrollbar min-h-0 select-none"
             :class="{ 'cursor-grab': !isDragging, 'cursor-grabbing': isDragging }"
             ref="scrollContainer"
             @mousedown="startDrag"
@@ -48,7 +48,7 @@
       <!-- Bottom: Content Panel (40% height in portrait, 50% in landscape) -->
       <ExhibitionContentPanel 
         :class="[
-          'content-section p-6 md:p-8',
+          'content-section px-6 pt-6 pb-32 md:px-8 md:pt-8 md:pb-36',
           isLandscape ? 'h-1/2' : 'h-2/5'
         ]"
         layout-mode="tablet"
@@ -75,7 +75,7 @@
       <!-- Bottom: Content Panel (50% height in portrait, 40% in landscape) -->
       <ExhibitionContentPanel 
         :class="[
-          'content-section p-6',
+          'content-section px-6 pt-6 pb-32',
           isLandscape ? 'h-2/5' : 'h-1/2'
         ]"
         layout-mode="mobile"
