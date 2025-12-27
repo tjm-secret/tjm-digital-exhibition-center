@@ -192,7 +192,7 @@ onUnmounted(() => {
 
 // 基本方法定義
 const initializeExhibition = async () => {
-  console.log('Initializing exhibition...')
+
   
   try {
     isLoading.value = true
@@ -218,24 +218,15 @@ const initializeExhibition = async () => {
 }
 
 const loadExhibitionConfig = async (exhibitionId: string) => {
-  console.log(`Loading exhibition config for: ${exhibitionId}`)
+
   
   try {
     const config = await resourceManager.loadExhibition(exhibitionId)
     exhibitionConfig.value = config
     scenes.value = config.scenes
     
-    console.log(`Loaded ${config.scenes.length} scenes from config`)
-    console.log('Available languages:', config.availableLanguages)
     
-    // 驗證場景音檔配置和圖片路徑
-    config.scenes.forEach((scene, index) => {
-      const audioLanguages = Object.keys(scene.audio || {})
-      console.log(`Scene ${index + 1} (${scene.id}):`)
-      console.log(`  - Audio languages:`, audioLanguages)
-      console.log(`  - Image URL:`, scene.image.url)
-      console.log(`  - Thumbnail URL:`, scene.image.thumbnail)
-    })
+
     
   } catch (error) {
     console.error('Failed to load exhibition config:', error)
@@ -244,7 +235,7 @@ const loadExhibitionConfig = async (exhibitionId: string) => {
 }
 
 const loadFallbackScenes = () => {
-  console.log('Loading fallback scenes...')
+
   // 備用場景數據（保留原有的硬編碼場景作為備用）
   scenes.value = [
     {
@@ -321,19 +312,19 @@ const initializeSwiper = () => {
   
   // 設置事件監聽器
   globalSwiperController.onSlideChange((index: number) => {
-    console.log(`Swiper slide changed to: ${index}`)
+
     // 切換場景時停止所有音訊播放
     audioManager.stopAudio()
     currentSceneIndex.value = index
   })
   
   globalSwiperController.onReachBeginning(() => {
-    console.log('Reached beginning of exhibition')
+
     showBoundaryMessage('已到達第一個場景')
   })
   
   globalSwiperController.onReachEnd(() => {
-    console.log('Reached end of exhibition')
+
     showBoundaryMessage('已到達最後一個場景')
   })
   
@@ -348,7 +339,7 @@ const initializeSwiper = () => {
 
 const navigateToScene = (index: number) => {
   if (index >= 0 && index < scenes.value.length) {
-    console.log(`Navigating to scene ${index}`)
+
     
     // 使用 SwiperController 進行導航
     const success = globalSwiperController.slideTo(index)
@@ -364,14 +355,14 @@ const navigateToScene = (index: number) => {
 const navigateNext = () => {
   const success = globalSwiperController.slideNext()
   if (!success) {
-    console.log('Cannot navigate to next scene - already at end or transitioning')
+
   }
 }
 
 const navigatePrev = () => {
   const success = globalSwiperController.slidePrev()
   if (!success) {
-    console.log('Cannot navigate to previous scene - already at beginning or transitioning')
+
   }
 }
 
@@ -386,7 +377,7 @@ const showBoundaryMessage = (message: string) => {
 }
 
 const preloadAdjacentScenes = () => {
-  console.log('Preloading adjacent scenes...')
+
   // 使用 ImageLoader 預載相鄰場景
   globalImageLoader.preloadAdjacentScenes(currentSceneIndex.value, scenes.value)
 }
@@ -398,11 +389,11 @@ watch(currentSceneIndex, () => {
 
 // 事件處理器
 const handleContentLoaded = (sceneId: string) => {
-  console.log(`Content loaded for scene: ${sceneId}`)
+
 }
 
 const handleImageLoaded = (sceneId: string) => {
-  console.log(`Image loaded for scene: ${sceneId}`)
+
 }
 
 const handleImageError = (sceneId: string, error: Event) => {
@@ -410,13 +401,13 @@ const handleImageError = (sceneId: string, error: Event) => {
 }
 
 const handleNavigationScroll = (direction: 'left' | 'right') => {
-  console.log(`Navigation scroll: ${direction}`)
+
   // 可以在這裡添加額外的滾動邏輯
 }
 
 // 響應式佈局事件處理器
 const handleLayoutChange = (layout: { mode: 'desktop' | 'tablet' | 'mobile'; orientation: string; dimensions: { width: number; height: number } }) => {
-  console.log('Layout changed:', layout)
+
   currentLayoutMode.value = layout.mode
   
   // 當佈局改變時，可能需要重新初始化 Swiper
@@ -427,7 +418,7 @@ const handleLayoutChange = (layout: { mode: 'desktop' | 'tablet' | 'mobile'; ori
 }
 
 const handleOrientationChange = (orientation: 'portrait' | 'landscape') => {
-  console.log('Orientation changed to:', orientation)
+
   
   // 方向改變時更新 Swiper
   setTimeout(() => {

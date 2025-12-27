@@ -182,7 +182,7 @@ const extractScale = (style: any): number => {
 }
 
 onMounted(() => {
-  console.log('NavigationComponent mounted')
+
 })
 
 // 暴露方法供父組件使用

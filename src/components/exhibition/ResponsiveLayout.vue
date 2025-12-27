@@ -17,8 +17,13 @@
         <div class="content-section absolute top-0 right-0 h-full w-[40%] max-w-[600px] z-10 flex flex-col pointer-events-none">
           <!-- Scrollable Content Area -->
           <div 
-            class="w-full h-full pointer-events-auto overflow-y-auto px-6 py-6 md:px-8 md:py-8 overscroll-contain custom-scrollbar min-h-0"
+            class="w-full h-full pointer-events-auto overflow-y-auto px-6 py-6 md:px-8 md:py-8 overscroll-contain custom-scrollbar min-h-0 select-none"
+            :class="{ 'cursor-grab': !isDragging, 'cursor-grabbing': isDragging }"
             ref="scrollContainer"
+            @mousedown="startDrag"
+            @mousemove="onDrag"
+            @mouseup="stopDrag"
+            @mouseleave="stopDrag"
           >
             <slot name="content" :layout-mode="'desktop'" />
           </div>
@@ -161,6 +166,30 @@ watch([layoutMode, orientation], ([newMode, newOrientation], [oldMode, oldOrient
     emit('orientation-change', newOrientation)
   }
 })
+
+
+// Drag to Scroll Logic
+const isDragging = ref(false)
+const startY = ref(0)
+const startScrollTop = ref(0)
+
+const startDrag = (e: MouseEvent) => {
+  if (!scrollContainer.value) return
+  isDragging.value = true
+  startY.value = e.clientY
+  startScrollTop.value = scrollContainer.value.scrollTop
+}
+
+const onDrag = (e: MouseEvent) => {
+  if (!isDragging.value || !scrollContainer.value) return
+  e.preventDefault()
+  const deltaY = e.clientY - startY.value
+  scrollContainer.value.scrollTop = startScrollTop.value - deltaY
+}
+
+const stopDrag = () => {
+  isDragging.value = false
+}
 
 const scrollContainer = ref<HTMLElement | null>(null)
 

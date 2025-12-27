@@ -408,7 +408,7 @@ export class SwiperController {
    * 處理邊界嘗試事件
    */
   private handleBoundaryAttempt(direction: 'prev' | 'next'): void {
-    console.log(`Boundary attempt detected: ${direction}`)
+
     if (this.onBoundaryAttemptCallback) {
       this.onBoundaryAttemptCallback(direction)
     }

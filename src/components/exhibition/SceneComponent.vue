@@ -156,7 +156,7 @@ const unloadContent = (): void => {
 }
 
 const handleImageLoad = (): void => {
-  console.log('Image loaded successfully:', props.scene.image.url)
+
   imageLoaded.value = true
   imageError.value = false
   isLoading.value = false
@@ -200,14 +200,14 @@ const handleGlobalImageError = (event: CustomEvent) => {
 // Watch for scene changes
 watch(() => props.scene, (newScene, oldScene) => {
   if (newScene.id !== oldScene?.id) {
-    console.log('Scene changed to:', newScene.id)
+
     loadContent()
   }
 }, { immediate: true })
 
 // Watch for active state changes
 watch(() => props.isActive, (isActive) => {
-  console.log('Scene active state changed:', isActive)
+
   if (isActive) {
     loadContent()
   }
